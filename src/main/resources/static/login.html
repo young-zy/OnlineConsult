@@ -16,6 +16,11 @@
 </script>
 <script type="text/javascript">
     let $$ = mdui.JQ;
+    $$.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+        }
+    });
 
     function buttonsubmit() {
         let temp = {
@@ -28,32 +33,30 @@
             dataType: 'json',
             contentType: "application/json",
             data: JSON.stringify(temp),
-            statusCode: {
-                401: function (xhr, textStatus) {
-                    let msg = JSON.parse(xhr.responseText);
-                    mdui.snackbar(
-                        {
-                            message: msg["reason"],
-                            position: 'top',
-                            timeout: 4000
+            success: function (data, textStatus, xhr) {
+                mdui.snackbar(
+                    {
+                        message: "登陆成功,正在跳转",
+                        position: 'top',
+                        timeout: 4000,
+                        onClosed: function () {
+                            window.history.back();
                         }
-                    );
-                    console.log(msg);
-                },
-                202: function (data, textStatus, xhr) {
-                    mdui.snackbar(
-                        {
-                            message: "登陆成功,正在跳转",
-                            position: 'top',
-                            timeout: 4000,
-                            onClosed: function () {
-                                window.history.back();
-                            }
-                        }
-                    );
-                    let msg = JSON.parse(xhr.responseText);
-                    window.localStorage.setItem('token', msg['token']);
-                }
+                    }
+                );
+                let msg = JSON.parse(xhr.responseText);
+                window.localStorage.setItem('token', msg['token']);
+            },
+            error: function (xhr, textStatus) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
             }
         });
         return false

@@ -33,7 +33,24 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<Object> post(@RequestBody LoginRequestModel login) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public ResponseEntity<Object> login(@RequestBody LoginRequestModel login, @RequestHeader(value = "token") String token) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        LoginResponseModel loginResponseModel;
+        if (token != null && loginService.hasToken(token)) {          //有token且token有效
+            loginResponseModel = new LoginResponseModel(false, null, "您已经登陆");
+            return new ResponseEntity<>(loginResponseModel, HttpStatus.FORBIDDEN);
+        }
+        token = loginService.login(login);
+        if (token != null) {
+            loginResponseModel = new LoginResponseModel(true, token, "");
+            return new ResponseEntity<>(loginResponseModel, HttpStatus.ACCEPTED);
+        } else {
+            loginResponseModel = new LoginResponseModel(false, null, "用户名或密码不正确");
+            return new ResponseEntity<>(loginResponseModel, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/user/logout")
+    public ResponseEntity<Object> logout(@RequestBody LoginRequestModel login) throws InvalidKeySpecException, NoSuchAlgorithmException {
         LoginResponseModel loginResponseModel;
         String token = loginService.login(login);
         if (token != null) {
