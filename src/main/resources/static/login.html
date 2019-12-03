@@ -1,10 +1,95 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" xmlns:51.703px>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>登陆</title>
+    <link href="./css/mdui.min.css" rel="stylesheet" type="text/css">
+    <script src="./js/mdui.min.js"></script>
 </head>
-<body>
 
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+    let $$ = mdui.JQ;
+
+    function buttonsubmit() {
+        let temp = {
+            username: $$('#username_text_input').val(),
+            password: $$('#password_input').val()
+        };
+        $$.ajax({
+            method: 'POST',
+            url: './user/login',
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(temp),
+            statusCode: {
+                401: function (xhr, textStatus) {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                },
+                202: function (data, textStatus, xhr) {
+                    mdui.snackbar(
+                        {
+                            message: "登陆成功,正在跳转",
+                            position: 'top',
+                            timeout: 4000,
+                            onClosed: function () {
+                                window.history.back();
+                            }
+                        }
+                    );
+                    let msg = JSON.parse(xhr.responseText);
+                    window.localStorage.setItem('token', msg['token']);
+                }
+            }
+        });
+        return false
+    }
+</script>
+<header class="mdui-appbar mdui-appbar-fixed">
+    <div class="mdui-toolbar mdui-color-theme">
+        <a class="mdui-typo-headline mdui-hidden-xs" href="">登陆</a>
+        <a class="mdui-typo-title" href=""></a>
+        <div class="mdui-toolbar-spacer"></div>
+    </div>
+</header>
+<br><br><br>
+<div class="mdui-container">
+    <div class="mdui-card mdui-center" style="width: 448px; ">
+        <div class="mdui-container">
+            <div class="mdui-textfield mdui-textfield-floating-label" id="username-textfield">
+                <label class="mdui-textfield-label">用户名</label>
+                <input class="mdui-textfield-input" id="username_text_input" name="name" type="text"/>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">密码</label>
+                <input class="mdui-textfield-input" id="password_input" required type="password"/>
+                <!--                <div class="mdui-textfield-error">密码至少 6 位，且包含大小写字母</div>-->
+                <div class="mdui-textfield-helper">请输入至少 6 位，且包含大小写字母的密码</div>
+            </div>
+            <br><br>
+            <div class="mdui-row">
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
+                        onclick=buttonsubmit()>登陆
+                </button>
+                <button class="mdui-btn mdui-ripple" onclick={location.href='register.html'}>注册</button>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
 </body>
 </html>

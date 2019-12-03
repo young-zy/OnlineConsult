@@ -19,7 +19,7 @@ public class CourseEntityPK implements Serializable {
         this.departmentId = departmentId;
     }
 
-    @Column(name = "cid", nullable = false)
+    @Column(name = "course_id", nullable = false)
     @Id
     public int getCourse_id() {
         return course_id;
