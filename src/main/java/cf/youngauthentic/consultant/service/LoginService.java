@@ -39,7 +39,15 @@ public class LoginService {
         }
     }
 
-    public Boolean hasToken(String tokenStr) {
+    public Boolean isLogined(String tokenStr) {
+        if (tokenStr == null) {
+            return false;
+        } else {
+            return hasToken(tokenStr);
+        }
+    }
+
+    private Boolean hasToken(String tokenStr) {
         return !stringRedisTemplate.opsForValue().get(tokenStr).equals("");
     }
 
