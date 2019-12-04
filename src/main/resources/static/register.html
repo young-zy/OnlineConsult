@@ -5,57 +5,116 @@
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <title>登陆</title>
+    <title>注册</title>
     <link href="./css/mdui.min.css" rel="stylesheet" type="text/css">
     <script src="./js/mdui.min.js"></script>
 </head>
 
 <body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
 <script type="text/javascript">
-    function buttonsubmit() {
-        document.getElementById('username_form').submit();
-        return false
+    let $$ = mdui.JQ;
+    $$.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+        }
+    });
+
+    function checkSame() {
+        if ($$('#password_input').val() !== $$('#password_input_again').val()) {
+            $$('#password_input_again_error').addClass('mdui-textfield-invalid');
+            return false;
+        } else {
+            $$('#password_input_again_error').removeClass('mdui-textfield-invalid');
+            return true;
+        }
     }
 
-    function show() {
-        window.location.href = "./show";
-        return false
+    function buttonSubmit() {
+        if (!checkSame()) {
+            return false;
+        }
+        if ($$('#password_input_error').hasClass('mdui-textfield-invalid-html5') ||
+            $$('#password_input_again_error').hasClass('mdui-textfield-invalid-html5') ||
+            $$('#username_input_error').hasClass('mdui-textfield-invalid-html5')) {
+            return false;
+        }
+        let temp = {
+            username: $$('#username_text_input').val(),
+            password: $$('#password_input').val()
+        };
+        $$.ajax(
+            {
+                method: 'POST',
+                url: './user/register',
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(temp),
+                success: function (data, textStatus, xhr) {
+                    mdui.snackbar(
+                        {
+                            message: "注册成功,正在跳转",
+                            position: 'top',
+                            timeout: 4000,
+                            onClosed: function () {
+                                window.location.href = './login.html';
+                            }
+                        }
+                    );
+                    let msg = JSON.parse(xhr.responseText);
+                    window.localStorage.setItem('token', msg['token']);
+                },
+                error: function (xhr, textStatus) {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                }
+            }
+        );
+
+
+        return false;
     }
 </script>
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
-        <a class="mdui-typo-headline mdui-hidden-xs" href="">登陆</a>
-        <a class="mdui-typo-title" href=""></a>
+        <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
+        <a class="mdui-typo-title" href="">注册</a>
         <div class="mdui-toolbar-spacer"></div>
     </div>
 </header>
 <br><br><br>
 <div class="mdui-container">
-    <div class="mdui-card">
+    <div class="mdui-card mdui-center" style="width: 448px;">
         <div class="mdui-container">
-            <form action="./login" id="username_form" method="POST">
-                <div class="mdui-textfield mdui-textfield-floating-label" id="username-textfield">
-                    <label class="mdui-textfield-label">用户名</label>
-                    <input class="mdui-textfield-input" id="username-textinput" name="name" type="text"/>
-                </div>
-                <div class="mdui-textfield mdui-textfield-floating-label">
-                    <label class="mdui-textfield-label">密码</label>
-                    <input class="mdui-textfield-input" pattern="^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z]).*$" required
-                           type="password"/>
-                    <div class="mdui-textfield-error">密码至少 6 位，且包含大小写字母</div>
-                    <div class="mdui-textfield-helper">请输入至少 6 位，且包含大小写字母的密码</div>
-                </div>
-            </form>
+            <div class="mdui-textfield mdui-textfield-floating-label" id="username_text_error">
+                <label class="mdui-textfield-label">用户名</label>
+                <input class="mdui-textfield-input" id="username_text_input" name="name" required type="text"/>
+                <div class="mdui-textfield-error">用户名不正确</div>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label" id="password_input_error">
+                <label class="mdui-textfield-label">密码</label>
+                <input class="mdui-textfield-input" id="password_input" pattern="^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z]).*$"
+                       required
+                       type="password"/>
+                <div class="mdui-textfield-error">密码至少 6 位，且包含大小写字母</div>
+                <div class="mdui-textfield-helper">请输入至少 6 位，且包含大小写字母的密码</div>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label" id="password_input_again_error">
+                <label class="mdui-textfield-label">重复密码</label>
+                <input class="mdui-textfield-input" id="password_input_again" onfocusout="checkSame()"
+                       required type="password"/>
+                <div class="mdui-textfield-error">两次输入的密码不同</div>
+            </div>
             <div class="mdui-row">
-                <div class="mdui-col-xs-0 mdui-col-sm-9">
-
-                </div>
-                <div class="mdui-col-xs-12 mdui-col-sm-3">
-                    <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple" onclick=buttonsubmit()>
-                        登陆
-                    </button>
-                    <button class="mdui-btn mdui-ripple" onclick={location.href='register.html'}>注册</button>
-                </div>
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
+                        onclick=buttonSubmit()>注册
+                </button>
             </div>
             <br><br><br>
         </div>

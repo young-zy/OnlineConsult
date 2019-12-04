@@ -60,11 +60,14 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<Object> post(@RequestBody RegisterRequestModel registerRequestModel) {
+    public ResponseEntity<Object> post(@RequestBody RegisterRequestModel registerRequestModel, @RequestHeader(value = "token") String token) {
+        if (loginService.isLogined(token)) {          //有token且token有效
+            return new ResponseEntity<>(new RegisterResponseModel(false, "您已经登陆");,HttpStatus.FORBIDDEN)
+        }
         try {
             userService.register(registerRequestModel);
         } catch (Exception e) {
-            return new ResponseEntity<>(new RegisterResponseModel(false, e.getMessage()), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new RegisterResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(new RegisterResponseModel(true, ""), HttpStatus.CREATED);
     }
