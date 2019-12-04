@@ -43,6 +43,10 @@ public class LoginService {
         return !stringRedisTemplate.opsForValue().get(tokenStr).equals("");
     }
 
+    public void logOut(String tokenStr) {
+        stringRedisTemplate.delete(tokenStr);
+    }
+
     public String getAuthority(String tokenStr) {
         Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
         return token.getAuthority();
