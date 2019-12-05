@@ -40,7 +40,7 @@ public class LoginService {
     }
 
     public Boolean isLogined(String tokenStr) {
-        if (tokenStr == null) {
+        if (tokenStr.equals("")) {
             return false;
         } else {
             return hasToken(tokenStr);
