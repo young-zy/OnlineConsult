@@ -1,6 +1,7 @@
 package cf.youngauthentic.consultant.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -29,6 +30,15 @@ public class DepartmentEntity {
         this.departmentName = departmentName;
     }
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            targetEntity = CourseEntity.class,
+            mappedBy = "department_id"
+    )
+    private List<CourseEntity> courseEntities;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,6 +52,4 @@ public class DepartmentEntity {
     public int hashCode() {
         return Objects.hash(departmentId, departmentName);
     }
-
-
 }
