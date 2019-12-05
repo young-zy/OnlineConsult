@@ -28,3 +28,5 @@ spring.redis.timeout=1000
 spring.jpa.database-platform = org.hibernate.dialect.MySQL5InnoDBDialect
 spring.jpa.generate-ddl=true
 spring.jpa.properties.hibernate.current_session_context_class = org.springframework.orm.hibernate5.SpringSessionContext
+
+server.error.include-stacktrace=never
