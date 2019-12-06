@@ -1,5 +1,7 @@
 package cf.youngauthentic.consultant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +33,7 @@ public class DepartmentEntity {
         this.departmentName = departmentName;
     }
 
-    //    @JsonIgnore
+    @JsonIgnore
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,

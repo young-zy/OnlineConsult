@@ -14,6 +14,7 @@ public class CourseEntity {
     private String cname;
     private DepartmentEntity department;
 
+    @JsonIgnore
     @Id
     @Column(name = "department_id", nullable = false)
     public int getDepartmentId() {
@@ -59,8 +60,7 @@ public class CourseEntity {
         return Objects.hash(departmentId, course_id, cname);
     }
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false)
     public DepartmentEntity getDepartment() {
         return department;
