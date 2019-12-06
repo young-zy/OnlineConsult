@@ -57,6 +57,10 @@ public class LoginService {
 
     public String getAuthority(String tokenStr) {
         Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
-        return token.getAuthority();
+        if (token == null) {
+            return "";
+        } else {
+            return token.getAuthority();
+        }
     }
 }
