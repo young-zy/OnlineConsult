@@ -1,5 +1,7 @@
 package cf.youngauthentic.consultant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -33,10 +35,11 @@ public class UserEntity {
         this.username = username;
     }
 
+    @JsonIgnore
     @Basic
     @Column(name = "hashed_password", nullable = false, length = 150)
     public String getHashedPassword() {
-        return hashedPassword;
+        return null;
     }
 
     public void setHashedPassword(String hashedPassword) {
