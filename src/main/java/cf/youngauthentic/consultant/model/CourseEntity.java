@@ -1,5 +1,7 @@
 package cf.youngauthentic.consultant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,7 +12,7 @@ public class CourseEntity {
     private int departmentId;
     private int course_id;
     private String cname;
-    private DepartmentEntity departmentByDepartmentId;
+    private DepartmentEntity department;
 
     @Id
     @Column(name = "department_id", nullable = false)
@@ -57,13 +59,14 @@ public class CourseEntity {
         return Objects.hash(departmentId, course_id, cname);
     }
 
-//    @ManyToOne
-//    @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false)
-//    public DepartmentEntity getDepartmentByDepartmentId() {
-//        return departmentByDepartmentId;
-//    }
-//
-//    public void setDepartmentByDepartmentId(DepartmentEntity departmentByDepartmentId) {
-//        this.departmentByDepartmentId = departmentByDepartmentId;
-//    }
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false)
+    public DepartmentEntity getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(DepartmentEntity departmentByDepartmentId) {
+        this.department = departmentByDepartmentId;
+    }
 }

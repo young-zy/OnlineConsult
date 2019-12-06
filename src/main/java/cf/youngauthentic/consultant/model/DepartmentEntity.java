@@ -9,6 +9,7 @@ import java.util.Objects;
 public class DepartmentEntity {
     private int departmentId;
     private String departmentName;
+    public List<CourseEntity> courseEntities;
 
     @Id
     @Column(name = "department_id", nullable = false)
@@ -30,13 +31,21 @@ public class DepartmentEntity {
         this.departmentName = departmentName;
     }
 
+    //    @JsonIgnore
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            targetEntity = CourseEntity.class,
-            mappedBy = "department_id"
+            mappedBy = "departmentId",
+            fetch = FetchType.LAZY
     )
-    private List<CourseEntity> courseEntities;
+    public List<CourseEntity> getCourseEntities() {
+        return courseEntities;
+    }
+
+
+    public void setCourseEntities(List<CourseEntity> courseEntities) {
+        this.courseEntities = courseEntities;
+    }
 
 
     @Override

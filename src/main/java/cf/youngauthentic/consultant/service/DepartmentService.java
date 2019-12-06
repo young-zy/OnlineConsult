@@ -14,7 +14,13 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepo departmentRepo;
 
-    public List<DepartmentEntity> getDepartments() {
+    @Autowired
+    private LoginService loginService;
+
+    public List<DepartmentEntity> getDepartments(String token) throws Exception {
+        if ("".equals(loginService.getAuthority(token))) {
+            throw new Exception("权限不足");
+        }
         List<DepartmentEntity> res = new ArrayList<>();
         departmentRepo.findAll().forEach(res::add);
         return res;
