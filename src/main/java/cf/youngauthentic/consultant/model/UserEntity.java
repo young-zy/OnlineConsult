@@ -39,7 +39,7 @@ public class UserEntity {
     @Basic
     @Column(name = "hashed_password", nullable = false, length = 150)
     public String getHashedPassword() {
-        return null;
+        return hashedPassword;
     }
 
     public void setHashedPassword(String hashedPassword) {
