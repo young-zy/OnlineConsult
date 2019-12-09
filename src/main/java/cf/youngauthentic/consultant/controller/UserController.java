@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping(path = "/user/{uid}")
     public @ResponseBody
-    Optional<UserEntity> get(@PathVariable int uid, @RequestHeader(defaultValue = "") String token) {
+    Optional<UserEntity> get(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
         return userService.getUser(uid);
     }
 
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<Object> post(@RequestBody RegisterRequestModel registerRequestModel, @RequestHeader(value = "token") String token) {
+    public ResponseEntity<Object> post(@RequestBody RegisterRequestModel registerRequestModel, @RequestHeader(value = "token", defaultValue = "") String token) {
         if (loginService.isLogined(token)) {          //有token且token有效
             return new ResponseEntity<>(new RegisterResponseModel(false, "您已经登陆"), HttpStatus.FORBIDDEN);
         }
