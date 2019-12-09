@@ -15,6 +15,15 @@ public class TeachesEntity {
     private CourseEntity course;
     private UserEntity teacher;
 
+    public TeachesEntity(int did, int cid, int uid) {
+        this.departmentId = did;
+        this.courseId = cid;
+        this.uid = uid;
+    }
+
+    public TeachesEntity() {
+    }
+
     @JsonIgnore
     @Id
     @Column(name = "department_id", nullable = false)

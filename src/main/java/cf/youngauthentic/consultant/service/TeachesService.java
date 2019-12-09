@@ -5,6 +5,7 @@ import cf.youngauthentic.consultant.model.UserEntity;
 import cf.youngauthentic.consultant.repo.TeachesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class TeachesService {
     TeachesRepo teachesRepo;
 
 
-    void addTeacher(int did, int cid, int uid) {
+    public void addTeacher(int did, int cid, int uid) {
         TeachesEntity teachesEntity = new TeachesEntity();
         teachesEntity.setUid(uid);
         teachesEntity.setDepartmentId(did);
@@ -27,7 +28,16 @@ public class TeachesService {
         teachesRepo.save(teachesEntity);
     }
 
-    void addTeacher(int did, int cid, String username) {
+    @Transactional
+    public void addTeachers(int did, int cid, List<Integer> uids) {
+        List<TeachesEntity> teachers = new ArrayList<>();
+        for (int uid : uids) {
+            teachers.add(new TeachesEntity(did, cid, uid));
+        }
+        teachesRepo.saveAll(teachers);
+    }
+
+    public void addTeacher(int did, int cid, String username) {
         int uid = userService.getUser(username).getUid();
         addTeacher(did, cid, uid);
     }
