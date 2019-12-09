@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface CourseRepo extends CrudRepository<CourseEntity, CourseEntityPK> {
     List<CourseEntity> findAllByDepartmentId(int departmentId);
+
+    CourseEntity findByDepartmentIdAndCourseId(int departmentId, int courseId);
 }

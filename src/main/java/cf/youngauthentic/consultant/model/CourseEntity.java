@@ -3,6 +3,7 @@ package cf.youngauthentic.consultant.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,9 +11,10 @@ import java.util.Objects;
 @IdClass(CourseEntityPK.class)
 public class CourseEntity {
     private int departmentId;
-    private int course_id;
+    private int courseId;
     private String cname;
     private DepartmentEntity department;
+    private List<TeachesEntity> teachers;
 
 
     @JsonIgnore
@@ -28,12 +30,12 @@ public class CourseEntity {
 
     @Id
     @Column(name = "course_id", nullable = false)
-    public int getCourse_id() {
-        return course_id;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setCourse_id(int cid) {
-        this.course_id = cid;
+    public void setCourseId(int cid) {
+        this.courseId = cid;
     }
 
     @Basic
@@ -52,13 +54,13 @@ public class CourseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CourseEntity that = (CourseEntity) o;
         return departmentId == that.departmentId &&
-                course_id == that.course_id &&
+                courseId == that.courseId &&
                 Objects.equals(cname, that.cname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(departmentId, course_id, cname);
+        return Objects.hash(departmentId, courseId, cname);
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -70,5 +72,20 @@ public class CourseEntity {
     public void setDepartment(DepartmentEntity departmentByDepartmentId) {
         this.department = departmentByDepartmentId;
     }
+
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumns({
+            @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false, insertable = false, updatable = false)
+    })
+    public List<TeachesEntity> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(List<TeachesEntity> teachers) {
+        this.teachers = teachers;
+    }
+
 
 }

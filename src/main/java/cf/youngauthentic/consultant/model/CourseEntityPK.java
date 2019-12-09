@@ -29,11 +29,11 @@ public class CourseEntityPK implements Serializable {
 
     @Column(name = "course_id", nullable = false)
     @Id
-    public int getCourse_id() {
+    public int getCourseId() {
         return course_id;
     }
 
-    public void setCourse_id(int cid) {
+    public void setCourseId(int cid) {
         this.course_id = cid;
     }
 

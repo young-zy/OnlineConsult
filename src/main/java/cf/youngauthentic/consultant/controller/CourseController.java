@@ -1,7 +1,7 @@
 package cf.youngauthentic.consultant.controller;
 
+import cf.youngauthentic.consultant.model.CourseEntity;
 import cf.youngauthentic.consultant.model.ResponseModel;
-import cf.youngauthentic.consultant.model.TeachesEntity;
 import cf.youngauthentic.consultant.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class CourseController {
     @GetMapping(path = "/department/{did}/course/{cid}")
     public ResponseEntity<Object> getDepartment(@PathVariable int did, @PathVariable int cid, @RequestHeader(defaultValue = "") String token) {
         try {
-            TeachesEntity teachesEntity = courseService.getCourseWithTeachers(did, cid);
-            if (teachesEntity == null) {
+            CourseEntity courseEntity = courseService.getCourseWithTeachers(did, cid);
+            if (courseEntity == null) {
                 return new ResponseEntity<>(new ResponseModel(false, "未找到"), HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(courseService.getCourse(did, cid), HttpStatus.OK);

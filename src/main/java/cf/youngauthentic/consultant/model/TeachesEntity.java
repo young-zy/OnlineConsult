@@ -1,5 +1,7 @@
 package cf.youngauthentic.consultant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -13,6 +15,7 @@ public class TeachesEntity {
     private CourseEntity course;
     private UserEntity teacher;
 
+    @JsonIgnore
     @Id
     @Column(name = "department_id", nullable = false)
     public int getDepartmentId() {
@@ -23,6 +26,7 @@ public class TeachesEntity {
         this.departmentId = departmentId;
     }
 
+    @JsonIgnore
     @Id
     @Column(name = "course_id", nullable = false)
     public int getCourseId() {
@@ -33,6 +37,7 @@ public class TeachesEntity {
         this.courseId = courseId;
     }
 
+    @JsonIgnore
     @Id
     @Column(name = "uid", nullable = false)
     public int getUid() {
@@ -58,11 +63,12 @@ public class TeachesEntity {
         return Objects.hash(departmentId, courseId, uid);
     }
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumns(
-            {@JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false),
-                    @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false, insertable = false, updatable = false)
-            })
+    @JoinColumns({
+            @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false, insertable = false, updatable = false)
+    })
     public CourseEntity getCourse() {
         return course;
     }
