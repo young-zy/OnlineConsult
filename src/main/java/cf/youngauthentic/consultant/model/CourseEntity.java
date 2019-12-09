@@ -16,7 +16,6 @@ public class CourseEntity {
     private DepartmentEntity department;
     private List<TeachesEntity> teachers;
 
-
     @JsonIgnore
     @Id
     @Column(name = "department_id", nullable = false)
