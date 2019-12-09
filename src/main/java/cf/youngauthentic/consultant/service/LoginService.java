@@ -39,7 +39,30 @@ public class LoginService {
         }
     }
 
-    public Boolean isLogined(String tokenStr) {
+    /**
+     * @param tokenStr token字符串
+     * @param level    设定的权限
+     * @return 返回是否有权限
+     */
+
+    public Boolean hasAuth(String tokenStr, Enum<Auth> level) {
+        if (tokenStr == null) {
+            return false;
+        }
+        if (!isLogined(tokenStr)) {
+            return false;
+        }
+        Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
+        if (level == Auth.ADMIN) {
+            return token.getAuthority().equals("admin");
+        } else if (level == Auth.TEACHER) {
+            return !token.getAuthority().equals("student");
+        } else {
+            return true;
+        }
+    }
+
+    private Boolean isLogined(String tokenStr) {
         if (tokenStr.equals("")) {
             return false;
         } else {

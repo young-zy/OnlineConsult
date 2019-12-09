@@ -1,6 +1,7 @@
 package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.*;
+import cf.youngauthentic.consultant.service.Auth;
 import cf.youngauthentic.consultant.service.LoginService;
 import cf.youngauthentic.consultant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class UserController {
     @PostMapping("/user/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestModel login, @RequestHeader(value = "token", defaultValue = "") String token) throws InvalidKeySpecException, NoSuchAlgorithmException {
         LoginResponseModel loginResponseModel;
-        if (loginService.isLogined(token)) {          //有token且token有效
+        if (loginService.hasAuth(token, Auth.STUDENT)) {          //有token且token有效
             loginResponseModel = new LoginResponseModel(false, null, "您已经登陆");
             return new ResponseEntity<>(loginResponseModel, HttpStatus.FORBIDDEN);
         }
@@ -61,7 +62,7 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseEntity<Object> post(@RequestBody RegisterRequestModel registerRequestModel, @RequestHeader(value = "token", defaultValue = "") String token) {
-        if (loginService.isLogined(token)) {          //有token且token有效
+        if (loginService.hasAuth(token, Auth.STUDENT)) {          //有token且token有效
             return new ResponseEntity<>(new RegisterResponseModel(false, "您已经登陆"), HttpStatus.FORBIDDEN);
         }
         try {
