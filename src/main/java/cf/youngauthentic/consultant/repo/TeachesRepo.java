@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface TeachesRepo extends CrudRepository<TeachesEntity, TeachesEntityPK> {
-    TeachesEntity findByDepartmentIdAndCourseId(int departmentId, int courseId);
+    List<TeachesEntity> findAllByDepartmentIdAndCourseId(int departmentId, int courseId);
 
     List<TeachesEntity> findAllByDepartmentId(int departmentId);
 
