@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping(path = "/user/{uid}")
     public @ResponseBody
-    Optional<UserEntity> get(@PathVariable int uid, @RequestHeader String token) {
+    Optional<UserEntity> get(@PathVariable int uid, @RequestHeader(defaultValue = "") String token) {
         return userService.getUser(uid);
     }
 
