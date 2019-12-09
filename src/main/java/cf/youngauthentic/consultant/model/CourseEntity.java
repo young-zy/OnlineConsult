@@ -14,6 +14,7 @@ public class CourseEntity {
     private String cname;
     private DepartmentEntity department;
 
+
     @JsonIgnore
     @Id
     @Column(name = "department_id", nullable = false)
@@ -69,4 +70,5 @@ public class CourseEntity {
     public void setDepartment(DepartmentEntity departmentByDepartmentId) {
         this.department = departmentByDepartmentId;
     }
+
 }

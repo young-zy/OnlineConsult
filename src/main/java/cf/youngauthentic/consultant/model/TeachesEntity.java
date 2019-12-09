@@ -11,7 +11,7 @@ public class TeachesEntity {
     private int courseId;
     private int uid;
     private CourseEntity course;
-    private UserEntity userByUid;
+    private UserEntity teacher;
 
     @Id
     @Column(name = "department_id", nullable = false)
@@ -58,23 +58,27 @@ public class TeachesEntity {
         return Objects.hash(departmentId, courseId, uid);
     }
 
-//    @ManyToOne
-//    @JoinColumns({@JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false), @JoinColumn(name = "course_id", referencedColumnName = "cid", nullable = false)})
-//    public CourseEntity getCourse() {
-//        return course;
-//    }
-//
-//    public void setCourse(CourseEntity course) {
-//        this.course = course;
-//    }
-//
-//    @ManyToOne
-//    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
-//    public UserEntity getUserByUid() {
-//        return userByUid;
-//    }
-//
-//    public void setUserByUid(UserEntity userByUid) {
-//        this.userByUid = userByUid;
-//    }
+    @ManyToOne
+    @JoinColumns(
+            {@JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false),
+                    @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false, insertable = false, updatable = false)
+            })
+    public CourseEntity getCourse() {
+        return course;
+    }
+
+    public void setCourse(CourseEntity course) {
+        this.course = course;
+    }
+
+    //
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false, insertable = false, updatable = false)
+    public UserEntity getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(UserEntity teacher) {
+        this.teacher = teacher;
+    }
 }
