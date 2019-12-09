@@ -48,7 +48,7 @@ public class LoginService {
     }
 
     private Boolean hasToken(String tokenStr) {
-        return !stringRedisTemplate.opsForValue().get(tokenStr).equals("");
+        return stringRedisTemplate.hasKey(tokenStr);
     }
 
     public void logOut(String tokenStr) {
