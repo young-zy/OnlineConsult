@@ -29,6 +29,19 @@ public class TeacherController {
         }
     }
 
+    /**
+     * 在教师列表中增加教师
+     * 若包含已有的则忽略，不包含的不会删除
+     *
+     * @param did      部门id
+     * @param cid      课程id
+     * @param token    token值
+     * @param teachers 教师uid列表
+     * @return 403 权限不足
+     * 400 操作出错
+     * 202 操作成功
+     */
+
     @PutMapping(path = "/department/{did}/course/{cid}/teacher")
     public ResponseEntity<Object> putTeacher(@PathVariable int did, @PathVariable int cid,
                                              @RequestHeader(value = "token", defaultValue = "") String token,
