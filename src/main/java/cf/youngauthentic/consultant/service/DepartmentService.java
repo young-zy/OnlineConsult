@@ -18,7 +18,7 @@ public class DepartmentService {
     private LoginService loginService;
 
     public List<DepartmentEntity> getDepartments(String token) throws Exception {
-        if ("".equals(loginService.getAuthority(token))) {
+        if (!loginService.hasAuth(token, Auth.STUDENT)) {
             throw new Exception("权限不足");
         }
         List<DepartmentEntity> res = new ArrayList<>();
