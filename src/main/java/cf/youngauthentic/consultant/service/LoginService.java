@@ -66,7 +66,12 @@ public class LoginService {
         if (tokenStr.equals("")) {
             return false;
         } else {
-            return hasToken(tokenStr);
+            if (hasToken(tokenStr)) {
+                stringRedisTemplate.expire(tokenStr, 12, TimeUnit.HOURS);     //存在则更新token失效时间
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
