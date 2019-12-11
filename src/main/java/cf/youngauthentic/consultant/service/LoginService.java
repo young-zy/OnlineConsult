@@ -42,21 +42,25 @@ public class LoginService {
     /**
      * @param tokenStr token字符串
      * @param level    设定的权限
-     * @return 返回是否有权限
+     * @return 有权限返回true
+     * @throws AuthException 无权限抛出异常
      */
 
     public Boolean hasAuth(String tokenStr, Enum<Auth> level) throws AuthException {
         if (tokenStr == null || !isLogined(tokenStr)) {
-            throw new AuthException("未登陆！");
+            throw new AuthException("未登陆或登陆已过期！");
         }
         Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
         if (level == Auth.ADMIN) {
-            return token.getAuthority().equals("admin");
+            if (!token.getAuthority().equals("admin")) {
+                throw new AuthException("权限不足！");
+            }
         } else if (level == Auth.TEACHER) {
-            return !token.getAuthority().equals("student");
-        } else {
-            return true;
+            if (token.getAuthority().equals("student")) {
+                throw new AuthException("权限不足！");
+            }
         }
+        return true;
     }
 
     private Boolean isLogined(String tokenStr) {
