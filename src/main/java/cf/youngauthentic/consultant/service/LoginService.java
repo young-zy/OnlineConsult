@@ -45,12 +45,9 @@ public class LoginService {
      * @return 返回是否有权限
      */
 
-    public Boolean hasAuth(String tokenStr, Enum<Auth> level) {
-        if (tokenStr == null) {
-            return false;
-        }
-        if (!isLogined(tokenStr)) {
-            return false;
+    public Boolean hasAuth(String tokenStr, Enum<Auth> level) throws AuthException {
+        if (tokenStr == null || !isLogined(tokenStr)) {
+            throw new AuthException("未登陆！");
         }
         Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
         if (level == Auth.ADMIN) {
@@ -92,3 +89,5 @@ public class LoginService {
         }
     }
 }
+
+
