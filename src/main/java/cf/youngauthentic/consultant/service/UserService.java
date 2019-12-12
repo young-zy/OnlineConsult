@@ -1,13 +1,16 @@
 package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.RegisterRequestModel;
+import cf.youngauthentic.consultant.model.Token;
 import cf.youngauthentic.consultant.model.UserEntity;
 import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @Service
 public class UserService {
@@ -17,8 +20,11 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public Optional<UserEntity> getUser(int uid) {
-        return userRepository.findById(uid);
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    public UserEntity getUser(int uid) {
+        return userRepository.findByUid(uid);
     }
 
     public UserEntity getUser(String username) {
@@ -39,6 +45,24 @@ public class UserService {
         userEntity.setAuthority("student");
         userEntity.setMsgNum(0);
         saveUser(userEntity);
+    }
+
+    public Boolean setPassword(int uid, String oldPass, String newPass, String tokenStr)
+            throws AuthException, InvalidKeySpecException, NoSuchAlgorithmException {
+        if (tokenStr.equals("")) {
+            throw new AuthException("token无效");
+        }
+        Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
+        UserEntity userEntity = getUser(uid);
+        if (userEntity.getUid() != token.getUid()) {
+            throw new AuthException("无修改权限");
+        } else if (!PasswordHash.validatePassword(oldPass, userEntity.getHashedPassword())) {
+            throw new AuthException("密码不正确");
+        } else {
+            userEntity.setHashedPassword(PasswordHash.createHash(newPass));
+            saveUser(userEntity);
+        }
+        return true;
     }
 
     public Boolean checkUsername(String username) {

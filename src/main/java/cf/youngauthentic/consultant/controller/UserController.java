@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -25,14 +24,22 @@ public class UserController {
 
     @GetMapping(path = "/user/{uid}")
     public @ResponseBody
-    Optional<UserEntity> get(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
+    UserEntity get(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
         return userService.getUser(uid);
     }
 
     @PostMapping(path = "/user/{uid}/password")
-    public ResponseEntity<Object> setPassword(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
-
-        return new ResponseEntity<>(new ResponseModel(false, ""), HttpStatus.FORBIDDEN);
+    public ResponseEntity<Object> setPassword(@PathVariable int uid,
+                                              @RequestBody SetPasswordRequestModel req,
+                                              @RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            userService.setPassword(uid, req.getOldPassword(), req.getNewPassword(), token);
+            return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(path = "/user/{uid}")
