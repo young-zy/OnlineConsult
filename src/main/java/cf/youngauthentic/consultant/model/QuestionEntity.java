@@ -16,8 +16,8 @@ public class QuestionEntity {
     private String answerContent;
     private Timestamp createTime;
     private CourseEntity course;
-    private UserEntity userByQuestionUid;
-    private UserEntity userByAnswerUid;
+    private UserEntity questioner;
+    private UserEntity answerer;
 
     @Id
     @Column(name = "department_id", nullable = false)
@@ -120,21 +120,21 @@ public class QuestionEntity {
 
     @ManyToOne
     @JoinColumn(name = "question_uid", referencedColumnName = "uid", nullable = false)
-    public UserEntity getUserByQuestionUid() {
-        return userByQuestionUid;
+    public UserEntity getQuestioner() {
+        return questioner;
     }
 
-    public void setUserByQuestionUid(UserEntity userByQuestionUid) {
-        this.userByQuestionUid = userByQuestionUid;
+    public void setQuestioner(UserEntity userByQuestionUid) {
+        this.questioner = userByQuestionUid;
     }
 
     @ManyToOne
     @JoinColumn(name = "answer_uid", referencedColumnName = "uid", nullable = false)
-    public UserEntity getUserByAnswerUid() {
-        return userByAnswerUid;
+    public UserEntity getAnswerer() {
+        return answerer;
     }
 
-    public void setUserByAnswerUid(UserEntity userByAnswerUid) {
-        this.userByAnswerUid = userByAnswerUid;
+    public void setAnswerer(UserEntity userByAnswerUid) {
+        this.answerer = userByAnswerUid;
     }
 }

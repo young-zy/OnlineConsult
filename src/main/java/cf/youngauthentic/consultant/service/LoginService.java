@@ -76,6 +76,14 @@ public class LoginService {
         }
     }
 
+    public int getUid(String tokenStr) {
+        Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
+        if (token == null) {
+            return -1;
+        }
+        return token.getUid();
+    }
+
     private Boolean hasToken(String tokenStr) {
         return stringRedisTemplate.hasKey(tokenStr);
     }

@@ -40,6 +40,15 @@ public class QuestionEntityPK implements Serializable {
         this.questionId = questionId;
     }
 
+    public QuestionEntityPK(int departmentId, int courseId, int questionId) {
+        this.departmentId = departmentId;
+        this.courseId = courseId;
+        this.questionId = questionId;
+    }
+
+    public QuestionEntityPK() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

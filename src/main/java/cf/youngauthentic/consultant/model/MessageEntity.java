@@ -9,7 +9,8 @@ public class MessageEntity {
     private int messageId;
     private String messageTitle;
     private QuestionEntity question;
-    private UserEntity userByUserUid;
+    private UserEntity user;
+    private int isAcknowledged;
 
     @Id
     @Column(name = "message_id", nullable = false)
@@ -29,6 +30,16 @@ public class MessageEntity {
 
     public void setMessageTitle(String messageTitle) {
         this.messageTitle = messageTitle;
+    }
+
+    @Basic
+    @Column(name = "is_acknowledged")
+    public int getIsAcknowledged() {
+        return isAcknowledged;
+    }
+
+    public void setIsAcknowledged(int isAcknowledged) {
+        this.isAcknowledged = isAcknowledged;
     }
 
     @Override
@@ -57,11 +68,11 @@ public class MessageEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_uid", referencedColumnName = "uid", nullable = false)
-    public UserEntity getUserByUserUid() {
-        return userByUserUid;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserByUserUid(UserEntity userByUserUid) {
-        this.userByUserUid = userByUserUid;
+    public void setUser(UserEntity userByUserUid) {
+        this.user = userByUserUid;
     }
 }
