@@ -9,5 +9,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEntityPK> {
+
     List<QuestionEntity> findAllByDepartmentIdAndCourseId(int departmentId, int courseId, Pageable pageable);
+
+    QuestionEntity findByDepartmentIdAndCourseIdAndQuestionId(int departmentId, int courseId, int questionId);
 }
