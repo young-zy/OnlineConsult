@@ -15,6 +15,18 @@
 
 </script>
 <script type="text/javascript">
+    function getQueryVariable(variable) {
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if (pair[0] === variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
     let $$ = mdui.JQ;
     $$.ajaxSetup({
         beforeSend: function (xhr) {
@@ -29,18 +41,23 @@
 
         },
         error: function (xhr, textStatus) {
-            if (xhr.status === 403 && !(window.localStorage.getItem('token'))) {
+            if (xhr.status === 403) {
+                if (window.localStorage.getItem('token')) {
+                    $$('#dialog_title').text("登陆已过期");
+                } else {
+                    $$('#dialog_title').text("您还未登陆");
+                }
                 let dialog = new mdui.Dialog('#redirectToLoginDialog');
                 let temp = document.getElementById('redirectToLoginDialog');
-                temp.addEventListener('closed.mdui.dialog', function (event) {
-                    event.preventDefault();
-                    window.location = './login.html';
+                temp.addEventListener('closed.mdui.dialog', function () {
+                    window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
                     console.log('redirect to login');
+                    return false
                 });
-                temp.addEventListener('confirm.mdui.dialog', function (event) {
-                    event.preventDefault();
-                    window.location = './login.html';
+                temp.addEventListener('confirm.mdui.dialog', function () {
+                    window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
                     console.log('redirect to login');
+                    return false
                 });
                 dialog.open();
             } else {
@@ -69,7 +86,7 @@
 
 
     <div class="mdui-dialog" id="redirectToLoginDialog">
-        <div class="mdui-dialog-title">您还未登陆</div>
+        <div class="mdui-dialog-title" id="dialog_title">您还未登陆</div>
         <div class="mdui-dialog-content">点击确认跳转至登陆页面!</div>
         <div class="mdui-dialog-actions">
             <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
