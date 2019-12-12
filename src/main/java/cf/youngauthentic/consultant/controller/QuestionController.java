@@ -1,6 +1,7 @@
 package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.QuestionEntity;
+import cf.youngauthentic.consultant.model.QuestionRequestModel;
 import cf.youngauthentic.consultant.model.ResponseModel;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.QuestionService;
@@ -34,12 +35,35 @@ public class QuestionController {
         }
     }
 
+    @GetMapping("/department/{did}/course/{cid}/question/{qid}")
+    public ResponseEntity<Object> getQuestion(@PathVariable int did,
+                                              @PathVariable int cid,
+                                              @PathVariable int qid,
+                                              @RequestHeader(value = "token", defaultValue = "") String token
+    ) {
+        try {
+            QuestionEntity question = questionService.getQuestion(did, cid, qid, token);
+            return new ResponseEntity<>(question, HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/department/{did}/course/{cid}/question")
     public ResponseEntity<Object> questionPost(@PathVariable int did,
                                                @PathVariable int cid,
+                                               @RequestBody QuestionRequestModel question,
                                                @RequestHeader(value = "token", defaultValue = "") String token) {
-
-
-        return new ResponseEntity<>(new ResponseModel(false, ""), HttpStatus.FORBIDDEN);
+        try {
+            questionService.saveQuestion(did, cid, question.getTitle(), question.getContent(), token);
+            return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 }
