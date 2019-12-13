@@ -2,6 +2,7 @@ package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.CourseEntity;
 import cf.youngauthentic.consultant.model.ResponseModel;
+import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,17 +22,22 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @GetMapping(path = "/department/{id}/course")
-    public ResponseEntity<Object> getDepartments(@PathVariable int id, @RequestHeader(defaultValue = "") String token) {
+    @GetMapping(path = "/department/{did}/course")
+    public ResponseEntity<Object> getDepartments(@PathVariable int did,
+                                                 @RequestHeader(defaultValue = "") String token) {
         try {
-            return new ResponseEntity<>(courseService.getCourses(id), HttpStatus.OK);
-        } catch (Exception e) {
+            return new ResponseEntity<>(courseService.getCourses(did, token), HttpStatus.OK);
+        } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping(path = "/department/{did}/course/{cid}")
-    public ResponseEntity<Object> getDepartment(@PathVariable int did, @PathVariable int cid, @RequestHeader(defaultValue = "") String token) {
+    public ResponseEntity<Object> getDepartment(@PathVariable int did,
+                                                @PathVariable int cid,
+                                                @RequestHeader(defaultValue = "") String token) {
         try {
             CourseEntity courseEntity = courseService.getCourseWithTeachers(did, cid);
             if (courseEntity == null) {
