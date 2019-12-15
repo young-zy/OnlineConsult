@@ -1,5 +1,7 @@
-package cf.youngauthentic.consultant.model;
+package cf.youngauthentic.consultant.model.course;
 
+import cf.youngauthentic.consultant.model.TeachesEntity;
+import cf.youngauthentic.consultant.model.department.DepartmentEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

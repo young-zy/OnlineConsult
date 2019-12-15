@@ -1,8 +1,8 @@
 package cf.youngauthentic.consultant.repo;
 
-import cf.youngauthentic.consultant.model.DepartmentEntity;
-import cf.youngauthentic.consultant.model.DepartmentWithCourse;
-import cf.youngauthentic.consultant.model.DepartmentWithoutCourse;
+import cf.youngauthentic.consultant.model.department.DepartmentEntity;
+import cf.youngauthentic.consultant.model.department.DepartmentWithCourse;
+import cf.youngauthentic.consultant.model.department.DepartmentWithoutCourse;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

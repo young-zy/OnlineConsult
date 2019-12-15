@@ -1,5 +1,7 @@
 package cf.youngauthentic.consultant.model;
 
+import cf.youngauthentic.consultant.model.question.QuestionEntity;
+
 import javax.persistence.*;
 import java.util.Objects;
 

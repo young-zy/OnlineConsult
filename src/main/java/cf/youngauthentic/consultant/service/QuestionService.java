@@ -1,6 +1,6 @@
 package cf.youngauthentic.consultant.service;
 
-import cf.youngauthentic.consultant.model.QuestionEntity;
+import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.repo.QuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

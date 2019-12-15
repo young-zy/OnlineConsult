@@ -1,4 +1,7 @@
-package cf.youngauthentic.consultant.model;
+package cf.youngauthentic.consultant.model.question;
+
+import cf.youngauthentic.consultant.model.UserEntity;
+import cf.youngauthentic.consultant.model.course.CourseEntity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

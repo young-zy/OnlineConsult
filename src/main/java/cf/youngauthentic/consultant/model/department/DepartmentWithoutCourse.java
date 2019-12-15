@@ -1,4 +1,4 @@
-package cf.youngauthentic.consultant.model;
+package cf.youngauthentic.consultant.model.department;
 
 import org.springframework.data.rest.core.config.Projection;
 

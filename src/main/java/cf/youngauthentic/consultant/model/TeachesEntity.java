@@ -1,5 +1,6 @@
 package cf.youngauthentic.consultant.model;
 
+import cf.youngauthentic.consultant.model.course.CourseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

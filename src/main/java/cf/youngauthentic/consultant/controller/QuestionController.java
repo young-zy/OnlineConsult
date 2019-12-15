@@ -1,8 +1,8 @@
 package cf.youngauthentic.consultant.controller;
 
-import cf.youngauthentic.consultant.model.QuestionEntity;
 import cf.youngauthentic.consultant.model.QuestionRequestModel;
 import cf.youngauthentic.consultant.model.ResponseModel;
+import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;

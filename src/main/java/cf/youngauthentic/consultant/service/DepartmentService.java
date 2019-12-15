@@ -1,7 +1,7 @@
 package cf.youngauthentic.consultant.service;
 
-import cf.youngauthentic.consultant.model.DepartmentWithCourse;
-import cf.youngauthentic.consultant.model.DepartmentWithoutCourse;
+import cf.youngauthentic.consultant.model.department.DepartmentWithCourse;
+import cf.youngauthentic.consultant.model.department.DepartmentWithoutCourse;
 import cf.youngauthentic.consultant.repo.DepartmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
