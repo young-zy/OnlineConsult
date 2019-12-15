@@ -1,4 +1,6 @@
-package cf.youngauthentic.consultant.model;
+package cf.youngauthentic.consultant.model.department;
+
+import cf.youngauthentic.consultant.model.course.CourseEntity;
 
 import javax.persistence.*;
 import java.util.List;

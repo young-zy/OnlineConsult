@@ -1,8 +1,8 @@
 package cf.youngauthentic.consultant.repo;
 
 
-import cf.youngauthentic.consultant.model.QuestionEntity;
-import cf.youngauthentic.consultant.model.QuestionEntityPK;
+import cf.youngauthentic.consultant.model.question.QuestionEntity;
+import cf.youngauthentic.consultant.model.question.QuestionEntityPK;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,8 +1,8 @@
 package cf.youngauthentic.consultant.repo;
 
-import cf.youngauthentic.consultant.model.CourseEntity;
-import cf.youngauthentic.consultant.model.CourseEntityPK;
-import cf.youngauthentic.consultant.model.CourseWithoutTeachers;
+import cf.youngauthentic.consultant.model.course.CourseEntity;
+import cf.youngauthentic.consultant.model.course.CourseEntityPK;
+import cf.youngauthentic.consultant.model.course.CourseWithoutTeachers;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
