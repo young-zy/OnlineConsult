@@ -3,6 +3,7 @@ package cf.youngauthentic.consultant.controller;
 import cf.youngauthentic.consultant.model.QuestionRequestModel;
 import cf.youngauthentic.consultant.model.ResponseModel;
 import cf.youngauthentic.consultant.model.question.QuestionEntity;
+import cf.youngauthentic.consultant.model.question.QuestionForList;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class QuestionController {
                                                @RequestParam(defaultValue = "1") String pageStr) {
         try {
             int page = Integer.parseInt(pageStr);
-            List<QuestionEntity> questions = questionService.getQuestions(did, cid, --page, token);
+            List<QuestionForList> questions = questionService.getQuestions(did, cid, --page, token);
             return new ResponseEntity<>(questions, HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
