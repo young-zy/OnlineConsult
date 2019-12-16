@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MessageRepo extends CrudRepository<MessageEntity, Integer> {
     List<MessageEntity> findAllByUser(UserEntity user);
+
+    int countAllByUidAndIsAcknowledged(int uid, int isAcknowledged);
 }

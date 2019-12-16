@@ -12,6 +12,7 @@ public class MessageEntity {
     private int messageId;
     private String messageTitle;
     private QuestionEntity question;
+    private int uid;
     private UserEntity user;
     private int isAcknowledged;
 
@@ -24,6 +25,16 @@ public class MessageEntity {
 
     public void setMessageId(int messageId) {
         this.messageId = messageId;
+    }
+
+    @Basic
+    @Column(name = "uid", nullable = false)
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     @Basic
@@ -71,7 +82,7 @@ public class MessageEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_uid", referencedColumnName = "uid", nullable = false)
+    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false, insertable = false, updatable = false)
     public UserEntity getUser() {
         return user;
     }

@@ -39,4 +39,10 @@ public class MessageService {
         return messageRepo.findAllByUser(userService.getUser(uid));
     }
 
+    public int getUnreadMessageCount(String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
+        int uid = loginService.getUid(token);
+        return messageRepo.countAllByUidAndIsAcknowledged(uid, 0);
+    }
+
 }
