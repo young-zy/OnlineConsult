@@ -1,7 +1,6 @@
 package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.course.CourseEntity;
-import cf.youngauthentic.consultant.model.course.CourseEntityPK;
 import cf.youngauthentic.consultant.model.course.CourseWithTeachers;
 import cf.youngauthentic.consultant.model.course.CourseWithoutTeachers;
 import cf.youngauthentic.consultant.repo.CourseRepo;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -30,11 +28,6 @@ public class CourseService {
 //        temp.forEach(it -> teachers.add(it->));
 //        return teachers;
 //    }
-
-    public Optional<CourseEntity> getCourse(int did, int cid) {
-        CourseEntityPK pk = new CourseEntityPK(did, cid);
-        return courseRepo.findById(pk);
-    }
 
     public CourseWithTeachers getCourseWithTeachers(int departmentId, int courseId, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);

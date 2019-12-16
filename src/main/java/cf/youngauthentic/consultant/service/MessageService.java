@@ -1,9 +1,12 @@
 package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.MessageEntity;
+import cf.youngauthentic.consultant.model.question.QuestionEntity;
+import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,9 +21,13 @@ public class MessageService {
     @Autowired
     LoginService loginService;
 
-    public void addMessage() {
+    @Transactional
+    public void addMessage(String title, QuestionEntity question, UserEntity userEntity) {
         MessageEntity messageEntity = new MessageEntity();
-
+        messageEntity.setMessageTitle(title);
+        messageEntity.setQuestion(question);
+        messageEntity.setUser(userEntity);
+        messageRepo.save(messageEntity);
     }
 
     public List<MessageEntity> getMessages(String token) {

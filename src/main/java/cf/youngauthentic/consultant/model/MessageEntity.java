@@ -17,6 +17,7 @@ public class MessageEntity {
 
     @Id
     @Column(name = "message_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getMessageId() {
         return messageId;
     }

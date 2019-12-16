@@ -15,4 +15,6 @@ public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEnt
     List<QuestionForList> findAllByDepartmentIdAndCourseId(int departmentId, int courseId, Pageable pageable);
 
     QuestionWithSimpleUser findByDepartmentIdAndCourseIdAndQuestionId(int departmentId, int courseId, int questionId);
+
+    QuestionEntity findFirstByDepartmentIdEqualsAndCourseIdEqualsOrderByQuestionIdDesc(int departmentId, int courseId);
 }
