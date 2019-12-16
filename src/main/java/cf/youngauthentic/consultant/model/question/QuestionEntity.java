@@ -111,15 +111,17 @@ public class QuestionEntity {
         return Objects.hash(departmentId, courseId, questionId, questionTitle, questionContent, answerContent, createTime);
     }
 
-//    @ManyToOne
-//    @JoinColumns({@JoinColumn(name = "course_id", referencedColumnName = "department_id", nullable = false), @JoinColumn(name = "department_id", referencedColumnName = "cid", nullable = false)})
-//    public CourseEntity getCourse() {
-//        return course;
-//    }
-//
-//    public void setCourse(CourseEntity course) {
-//        this.course = course;
-//    }
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "course_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "department_id", referencedColumnName = "course_id", nullable = false, insertable = false, updatable = false)})
+    public CourseEntity getCourse() {
+        return course;
+    }
+
+    public void setCourse(CourseEntity course) {
+        this.course = course;
+    }
 
     @ManyToOne
     @JoinColumn(name = "question_uid", referencedColumnName = "uid", nullable = false)

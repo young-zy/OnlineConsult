@@ -1,10 +1,11 @@
 package cf.youngauthentic.consultant.model.course;
 
+import cf.youngauthentic.consultant.model.department.DepartmentWithoutCourse;
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types = CourseEntity.class)
 public interface CourseWithoutTeachers {
-    int getDepartmentId();
+    DepartmentWithoutCourse getDepartment();
 
     int getCourseId();
 
