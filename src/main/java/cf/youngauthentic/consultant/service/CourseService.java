@@ -33,4 +33,12 @@ public class CourseService {
         loginService.hasAuth(token, Auth.STUDENT);
         return courseRepo.findByDepartmentIdAndCourseId(departmentId, courseId);
     }
+
+    public Boolean addCourse(int departmentId, String courseName, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.ADMIN);
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setCname(courseName);
+        courseEntity.setDepartmentId(departmentId);
+        return true;
+    }
 }
