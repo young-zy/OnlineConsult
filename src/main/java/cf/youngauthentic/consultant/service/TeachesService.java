@@ -1,7 +1,7 @@
 package cf.youngauthentic.consultant.service;
 
-import cf.youngauthentic.consultant.model.TeachesEntity;
-import cf.youngauthentic.consultant.model.UserEntity;
+import cf.youngauthentic.consultant.model.teaches.TeachesEntity;
+import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.TeachesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

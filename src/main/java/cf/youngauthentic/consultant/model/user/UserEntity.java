@@ -1,4 +1,4 @@
-package cf.youngauthentic.consultant.model;
+package cf.youngauthentic.consultant.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

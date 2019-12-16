@@ -1,7 +1,7 @@
 package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.ResponseModel;
-import cf.youngauthentic.consultant.model.course.CourseEntity;
+import cf.youngauthentic.consultant.model.course.CourseWithTeachers;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +39,11 @@ public class CourseController {
                                                 @PathVariable int cid,
                                                 @RequestHeader(defaultValue = "") String token) {
         try {
-            CourseEntity courseEntity = courseService.getCourseWithTeachers(did, cid, token);
-            if (courseEntity == null) {
+            CourseWithTeachers courseWithTeachers = courseService.getCourseWithTeachers(did, cid, token);
+            if (courseWithTeachers == null) {
                 return new ResponseEntity<>(new ResponseModel(false, "未找到"), HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(courseService.getCourse(did, cid), HttpStatus.OK);
+                return new ResponseEntity<>(courseWithTeachers, HttpStatus.OK);
             }
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);

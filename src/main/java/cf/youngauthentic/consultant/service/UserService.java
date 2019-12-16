@@ -2,7 +2,7 @@ package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.RegisterRequestModel;
 import cf.youngauthentic.consultant.model.Token;
-import cf.youngauthentic.consultant.model.UserEntity;
+import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;

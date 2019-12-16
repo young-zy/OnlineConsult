@@ -1,6 +1,6 @@
 package cf.youngauthentic.consultant.repo;
 
-import cf.youngauthentic.consultant.model.UserEntity;
+import cf.youngauthentic.consultant.model.user.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepo extends CrudRepository<UserEntity, Integer> {

@@ -1,6 +1,7 @@
 package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.*;
+import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.service.Auth;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.LoginService;

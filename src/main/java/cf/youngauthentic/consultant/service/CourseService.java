@@ -2,6 +2,7 @@ package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.course.CourseEntity;
 import cf.youngauthentic.consultant.model.course.CourseEntityPK;
+import cf.youngauthentic.consultant.model.course.CourseWithTeachers;
 import cf.youngauthentic.consultant.model.course.CourseWithoutTeachers;
 import cf.youngauthentic.consultant.repo.CourseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class CourseService {
         return courseRepo.findById(pk);
     }
 
-    public CourseEntity getCourseWithTeachers(int departmentId, int courseId, String token) throws AuthException {
+    public CourseWithTeachers getCourseWithTeachers(int departmentId, int courseId, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);
         return courseRepo.findByDepartmentIdAndCourseId(departmentId, courseId);
     }
