@@ -2,6 +2,7 @@ package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
+import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import cf.youngauthentic.consultant.repo.QuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +27,7 @@ public class QuestionService {
         return questionRepo.findAllByDepartmentIdAndCourseId(did, cid, PageRequest.of(page, 10, Sort.by("createTime").descending()));
     }
 
-    public QuestionEntity getQuestion(int did, int cid, int qid, String token) throws AuthException {
+    public QuestionWithSimpleUser getQuestion(int did, int cid, int qid, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);
         return questionRepo.findByDepartmentIdAndCourseIdAndQuestionId(did, cid, qid);
     }

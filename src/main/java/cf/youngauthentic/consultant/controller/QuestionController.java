@@ -2,8 +2,8 @@ package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.QuestionRequestModel;
 import cf.youngauthentic.consultant.model.ResponseModel;
-import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
+import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class QuestionController {
                                               @RequestHeader(value = "token", defaultValue = "") String token
     ) {
         try {
-            QuestionEntity question = questionService.getQuestion(did, cid, qid, token);
+            QuestionWithSimpleUser question = questionService.getQuestion(did, cid, qid, token);
             return new ResponseEntity<>(question, HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);

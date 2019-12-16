@@ -4,6 +4,7 @@ package cf.youngauthentic.consultant.repo;
 import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.model.question.QuestionEntityPK;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
+import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,5 +14,5 @@ public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEnt
 
     List<QuestionForList> findAllByDepartmentIdAndCourseId(int departmentId, int courseId, Pageable pageable);
 
-    QuestionEntity findByDepartmentIdAndCourseIdAndQuestionId(int departmentId, int courseId, int questionId);
+    QuestionWithSimpleUser findByDepartmentIdAndCourseIdAndQuestionId(int departmentId, int courseId, int questionId);
 }
