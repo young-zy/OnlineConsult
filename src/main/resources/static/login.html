@@ -52,7 +52,13 @@
                         position: 'top',
                         timeout: 4000,
                         onClosed: function () {
-                            window.location.href = getQueryVariable('back');
+                            let back = getQueryVariable('back');
+                            if (back == null || back === '') {
+                                window.location.href = './index.html';
+                            } else {
+                                window.location.href = back;
+                            }
+
                         }
                     }
                 );
