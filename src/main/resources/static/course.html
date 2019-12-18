@@ -49,6 +49,9 @@
         url: './department/' + did + '/course/' + cid + '/question/count',
         success: function (data, textStatus, xhr) {
             totPage = Math.ceil(parseInt(xhr.responseText) / 10.0);
+            if (totPage === 0) {
+                totPage = 1;
+            }
             if (currentPage > totPage) {
                 currentPage = totPage;
                 window.location.href = './course.html?department=' + did + '&course=' + cid + '&page=' + totPage;
