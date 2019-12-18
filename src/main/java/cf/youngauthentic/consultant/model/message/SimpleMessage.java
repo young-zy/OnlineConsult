@@ -13,4 +13,6 @@ public interface SimpleMessage {
     int getQuestionId();
 
     String getMessageTitle();
+
+    int getIsAcknowledged();
 }

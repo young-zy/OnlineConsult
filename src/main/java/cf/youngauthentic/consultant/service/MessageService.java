@@ -33,13 +33,13 @@ public class MessageService {
         messageRepo.save(messageEntity);
     }
 
-    public List<MessageEntity> getMessages(String token, int page) {
+    public List<SimpleMessage> getMessages(String token, int page) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
         int uid = loginService.getUid(token);
-        List<MessageEntity> result;
         if (uid == -1) {
             return null;
         }
-        return messageRepo.findAllByUid(uid, PageRequest.of(page, 10, Sort.by("isAcknowledged").descending().and(Sort.by("messageId").descending())));
+        return messageRepo.findAllByUid(uid, PageRequest.of(page, 10, Sort.by("isAcknowledged").ascending().and(Sort.by("messageId").descending())));
     }
 
     public int getUnreadMessageCount(String token) throws AuthException {

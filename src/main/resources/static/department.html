@@ -61,6 +61,12 @@
             }
             let pageInfo = document.getElementById("page-info");
             pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
+            if (currentPage === 1) {
+                document.getElementById('previous-button').setAttribute('disabled', '');
+            }
+            if (currentPage === totPage) {
+                document.getElementById('next-button').setAttribute('disabled', '');
+            }
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {
@@ -115,12 +121,6 @@
                 listItem.appendChild(div);
                 list.appendChild(listItem);
             });
-            if (currentPage === 1) {
-                document.getElementById('previous-button').setAttribute('disabled', '');
-            }
-            if (currentPage === totPage) {
-                document.getElementById('next-button').setAttribute('disabled', '');
-            }
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {

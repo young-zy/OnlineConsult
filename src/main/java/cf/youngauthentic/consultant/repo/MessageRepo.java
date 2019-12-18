@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface MessageRepo extends CrudRepository<MessageEntity, Integer> {
-    List<MessageEntity> findAllByUid(int uid, Pageable pageable);
+    List<SimpleMessage> findAllByUid(int uid, Pageable pageable);
 
     SimpleMessage findByMessageId(int messageId);
 
