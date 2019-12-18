@@ -34,11 +34,11 @@
         }
     });
 
-    let currentPage = getQueryVariable('page');
-    if (currentPage === false) {
+    let currentPage = parseInt(getQueryVariable('page'));
+    console.log(currentPage);
+    if (currentPage === false || isNaN(currentPage)) {
         currentPage = 1;
     }
-
     let totPage = 1;
 
     $$.ajax({
@@ -46,6 +46,21 @@
         url: './department/count',
         success: function (data, textStatus, xhr) {
             totPage = Math.ceil(parseInt(xhr.responseText) / 10.0);
+            if (currentPage > totPage) {
+                currentPage = totPage;
+                window.location.href = "./index.html?page=" + totPage;
+            } else if (currentPage < 1) {
+                currentPage = 1;
+                window.location.href = "./index.html";
+            }
+            if (currentPage === 1) {
+                document.getElementById('previous-button').setAttribute('disabled', '');
+            }
+            if (currentPage === totPage) {
+                document.getElementById('next-button').setAttribute('disabled', '');
+            }
+            let pageInfo = document.getElementById("page-info");
+            pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {
@@ -81,13 +96,6 @@
         }
     });
 
-    if (currentPage > totPage) {
-        currentPage = totPage;
-        window.location.href = "./index.html?page=" + totPage;
-    } else if (currentPage < 1) {
-        currentPage = 1;
-        window.location.href = "./index.html";
-    }
 
     $$.ajax({
         method: 'GET',
@@ -108,14 +116,6 @@
                 listItem.appendChild(div);
                 list.appendChild(listItem);
             });
-            let pageInfo = document.getElementById("page-info");
-            pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
-            if (currentPage === 1) {
-                document.getElementById('previous-button').setAttribute('disabled', '');
-            }
-            if (currentPage === totPage) {
-                document.getElementById('next-button').setAttribute('disabled', '');
-            }
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {

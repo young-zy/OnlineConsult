@@ -34,18 +34,30 @@
         }
     });
 
-    let currentPage = getQueryVariable('page');
-    if (currentPage === false) {
+    let currentPage = parseInt(getQueryVariable('page'));
+    console.log(currentPage);
+    if (currentPage === false || isNaN(currentPage)) {
         currentPage = 1;
     }
 
     let totPage = 1;
+    let did = parseInt(getQueryVariable('department'));
+
 
     $$.ajax({
         method: 'GET',
-        url: './course/count',
+        url: './department/' + did + '/course/count',
         success: function (data, textStatus, xhr) {
             totPage = Math.ceil(parseInt(xhr.responseText) / 10.0);
+            if (currentPage > totPage) {
+                currentPage = totPage;
+                window.location.href = './department.html?department=' + did + '&page=' + totPage;
+            } else if (currentPage < 1) {
+                currentPage = 1;
+                window.location.href = './department.html?department=' + did;
+            }
+            let pageInfo = document.getElementById("page-info");
+            pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {
@@ -81,17 +93,9 @@
         }
     });
 
-    if (currentPage > totPage) {
-        currentPage = totPage;
-        window.location.href = "./index.html?page=" + totPage;
-    } else if (currentPage < 1) {
-        currentPage = 1;
-        window.location.href = "./index.html";
-    }
-
     $$.ajax({
         method: 'GET',
-        url: './department?page=' + currentPage,
+        url: './department/' + did + '/course?page=' + currentPage,
         success: function (data, textStatus, xhr) {
             let li = JSON.parse(xhr.responseText);
             let list = document.getElementById('list');
@@ -101,15 +105,13 @@
                 div.setAttribute("class", "mdui-list-item mdui-ripple mdui-card");
                 div.setAttribute("style", "padding: 10px;font-weight: 400;");
                 let url = document.createElement('a');
-                url.setAttribute('href', './department.html?department=' + it['departmentId']);
+                url.setAttribute('href', './course.html?department=' + did + '&course=' + it['courseId']);
                 url.setAttribute('style', 'width: 100%;');
-                url.innerText = it['departmentName'];
+                url.innerText = it['cname'];
                 div.appendChild(url);
                 listItem.appendChild(div);
                 list.appendChild(listItem);
             });
-            let pageInfo = document.getElementById("page-info");
-            pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
             if (currentPage === 1) {
                 document.getElementById('previous-button').setAttribute('disabled', '');
             }
@@ -203,11 +205,11 @@
     }
 
     function nextPage() {
-        window.location.href = './index.html?page=' + (currentPage + 1);
+        window.location.href = './department.html?department=' + did + '&page=' + (currentPage + 1);
     }
 
     function previousPage() {
-        window.location.href = './index.html?page=' + (currentPage - 1);
+        window.location.href = './department.html?department=' + did + '&page=' + (currentPage - 1);
     }
 
 
@@ -215,7 +217,7 @@
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
         <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
-        <a class="mdui-typo-title" href="">部门</a>
+        <a class="mdui-typo-title" href="">课程</a>
         <div class="mdui-toolbar-spacer"></div>
         <button class="mdui-btn" href="./messages.html" id="new-message"></button>
         <button class="mdui-btn" onclick="logout()">登出</button>
