@@ -1,4 +1,4 @@
-package cf.youngauthentic.consultant.model;
+package cf.youngauthentic.consultant.model.message;
 
 import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.model.user.UserEntity;
@@ -11,6 +11,9 @@ import java.util.Objects;
 public class MessageEntity {
     private int messageId;
     private String messageTitle;
+    private int departmentId;
+    private int courseId;
+    private int questionId;
     private QuestionEntity question;
     private int uid;
     private UserEntity user;
@@ -25,6 +28,36 @@ public class MessageEntity {
 
     public void setMessageId(int messageId) {
         this.messageId = messageId;
+    }
+
+    @Basic
+    @Column(name = "department_id", nullable = false)
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    @Basic
+    @Column(name = "course_id", nullable = false)
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    @Basic
+    @Column(name = "question_id", nullable = false)
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
     @Basic
@@ -72,7 +105,11 @@ public class MessageEntity {
     }
 
     @ManyToOne
-    @JoinColumns({@JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false), @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false), @JoinColumn(name = "question_id", referencedColumnName = "question_id", nullable = false)})
+    @JoinColumns({
+            @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "question_id", referencedColumnName = "question_id", nullable = false, insertable = false, updatable = false)
+    })
     public QuestionEntity getQuestion() {
         return question;
     }
