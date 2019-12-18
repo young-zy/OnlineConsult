@@ -110,6 +110,12 @@
             });
             let pageInfo = document.getElementById("page-info");
             pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
+            if (currentPage === 1) {
+                document.getElementById('previous-button').setAttribute('disabled', '');
+            }
+            if (currentPage === totPage) {
+                document.getElementById('next-button').setAttribute('disabled', '');
+            }
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {
@@ -131,6 +137,30 @@
                     return false
                 });
                 dialog.open();
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    $$.ajax({
+        method: 'GET',
+        url: './message/count',
+        success: function (data, textStatus, xhr) {
+            let count = parseInt(xhr.responseText);
+            document.getElementById('new-message').innerText = '新消息：' + count + '条';
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
             } else {
                 let msg = JSON.parse(xhr.responseText);
                 mdui.snackbar(
@@ -187,6 +217,7 @@
         <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
         <a class="mdui-typo-title" href="">部门</a>
         <div class="mdui-toolbar-spacer"></div>
+        <button class="mdui-btn" href="./messages.html" id="new-message"></button>
         <button class="mdui-btn" onclick="logout()">登出</button>
     </div>
 </header>
@@ -206,8 +237,10 @@
     </div>
     <div class="mdui-center mdui-text-center" id="page-info" style="font-size: 15px"></div>
     <div>
-        <button class="mdui-btn" onclick="previousPage()"><i class="mdui-icon material-icons">&#xe5cb;</i>上一页</button>
-        <button class="mdui-btn" onclick="nextPage()" style="float: right">下一页<i class="mdui-icon material-icons">&#xe5cc;</i>
+        <button class="mdui-btn" id="previous-button" onclick="previousPage()"><i class="mdui-icon material-icons">&#xe5cb;</i>上一页
+        </button>
+        <button class="mdui-btn" id="next-button" onclick="nextPage()" style="float: right">下一页<i
+                class="mdui-icon material-icons">&#xe5cc;</i>
         </button>
     </div>
 </div>
