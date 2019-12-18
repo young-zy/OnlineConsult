@@ -41,6 +41,11 @@ public class QuestionService {
         return questionRepo.findByDepartmentIdAndCourseIdAndQuestionId(did, cid, qid);
     }
 
+    public int getQuestionsCount(int did, int cid, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
+        return questionRepo.countAllByDepartmentIdAndCourseId(did, cid);
+    }
+
     /**
      * @param did     departmentId
      * @param cid     courseId

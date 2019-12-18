@@ -23,11 +23,25 @@ public class QuestionController {
     public ResponseEntity<Object> getQuestions(@PathVariable int did,
                                                @PathVariable int cid,
                                                @RequestHeader(value = "token", defaultValue = "") String token,
-                                               @RequestParam(defaultValue = "1") String pageStr) {
+                                               @RequestParam(value = "page", defaultValue = "1") String pageStr) {
         try {
             int page = Integer.parseInt(pageStr);
             List<QuestionForList> questions = questionService.getQuestions(did, cid, --page, token);
             return new ResponseEntity<>(questions, HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/department/{did}/course/{cid}/question/count")
+    public ResponseEntity<Object> getQuestionsCount(@PathVariable int did,
+                                                    @PathVariable int cid,
+                                                    @RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            return new ResponseEntity<>(questionService.getQuestionsCount(did, cid, token), HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
