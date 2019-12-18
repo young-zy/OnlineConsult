@@ -7,10 +7,7 @@ import cf.youngauthentic.consultant.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CourseController {
@@ -24,9 +21,12 @@ public class CourseController {
 
     @GetMapping(path = "/department/{did}/course")
     public ResponseEntity<Object> getCourses(@PathVariable int did,
-                                             @RequestHeader(defaultValue = "") String token) {
+                                             @RequestHeader(defaultValue = "") String token,
+                                             @RequestParam(value = "page", defaultValue = "1") String pageStr
+    ) {
         try {
-            return new ResponseEntity<>(courseService.getCourses(did, token), HttpStatus.OK);
+            int page = Integer.parseInt(pageStr);
+            return new ResponseEntity<>(courseService.getCourses(did, token, --page), HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
