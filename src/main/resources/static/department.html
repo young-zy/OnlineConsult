@@ -158,7 +158,7 @@
 
     $$.ajax({
         method: 'GET',
-        url: './message/count',
+        url: './message/count/unread',
         success: function (data, textStatus, xhr) {
             let count = parseInt(xhr.responseText);
             document.getElementById('new-message').innerText = '新消息：' + count + '条';
