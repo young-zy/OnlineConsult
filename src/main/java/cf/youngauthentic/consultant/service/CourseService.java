@@ -41,4 +41,9 @@ public class CourseService {
         courseEntity.setDepartmentId(departmentId);
         return true;
     }
+
+    public int countCourses(int departmentId, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
+        return courseRepo.countAllByDepartmentId(departmentId);
+    }
 }

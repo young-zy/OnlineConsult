@@ -23,8 +23,8 @@ public class CourseController {
     }
 
     @GetMapping(path = "/department/{did}/course")
-    public ResponseEntity<Object> getDepartments(@PathVariable int did,
-                                                 @RequestHeader(defaultValue = "") String token) {
+    public ResponseEntity<Object> getCourses(@PathVariable int did,
+                                             @RequestHeader(defaultValue = "") String token) {
         try {
             return new ResponseEntity<>(courseService.getCourses(did, token), HttpStatus.OK);
         } catch (AuthException e) {
@@ -35,9 +35,9 @@ public class CourseController {
     }
 
     @GetMapping(path = "/department/{did}/course/{cid}")
-    public ResponseEntity<Object> getDepartment(@PathVariable int did,
-                                                @PathVariable int cid,
-                                                @RequestHeader(defaultValue = "") String token) {
+    public ResponseEntity<Object> getCourse(@PathVariable int did,
+                                            @PathVariable int cid,
+                                            @RequestHeader(defaultValue = "") String token) {
         try {
             CourseWithTeachers courseWithTeachers = courseService.getCourseWithTeachers(did, cid, token);
             if (courseWithTeachers == null) {
@@ -45,6 +45,18 @@ public class CourseController {
             } else {
                 return new ResponseEntity<>(courseWithTeachers, HttpStatus.OK);
             }
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = "/department/{did}/course/count")
+    public ResponseEntity<Object> getCourseCount(@PathVariable int did,
+                                                 @RequestHeader(defaultValue = "") String token) {
+        try {
+            return new ResponseEntity<>(courseService.countCourses(did, token), HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
         } catch (Exception e) {

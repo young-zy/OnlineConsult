@@ -12,4 +12,6 @@ public interface CourseRepo extends CrudRepository<CourseEntity, CourseEntityPK>
     List<CourseWithoutTeachers> findAllByDepartmentId(int departmentId);
 
     CourseWithTeachers findByDepartmentIdAndCourseId(int departmentId, int courseId);
+
+    int countAllByDepartmentId(int departmentId);
 }
