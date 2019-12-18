@@ -1,10 +1,253 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" xmlns:51.703px>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>问题</title>
+    <link href="./css/mdui.min.css" rel="stylesheet" type="text/css">
+    <script src="./js/mdui.min.js"></script>
 </head>
-<body>
 
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+    function getQueryVariable(variable) {
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if (pair[0] === variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
+    let $$ = mdui.JQ;
+    $$.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+        }
+    });
+
+    let currentPage = parseInt(getQueryVariable('page'));
+    console.log(currentPage);
+    if (currentPage === false || isNaN(currentPage)) {
+        currentPage = 1;
+    }
+
+    let totPage = 1;
+    let did = parseInt(getQueryVariable('department'));
+    let cid = parseInt(getQueryVariable('course'));
+
+    $$.ajax({
+        method: 'GET',
+        url: './department/' + did + '/course/' + cid + '/question/count',
+        success: function (data, textStatus, xhr) {
+            totPage = Math.ceil(parseInt(xhr.responseText) / 10.0);
+            if (currentPage > totPage) {
+                currentPage = totPage;
+                window.location.href = './course.html?department=' + did + '&course=' + cid + '&page=' + totPage;
+            } else if (currentPage < 1) {
+                currentPage = 1;
+                window.location.href = './department.html?department=' + did + '&course=' + cid;
+            }
+            let pageInfo = document.getElementById("page-info");
+            pageInfo.innerText = '当前 第' + currentPage + '页， 共 ' + totPage + '页';
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+                if (window.localStorage.getItem('token')) {
+                    $$('#dialog_title').text("登陆已过期");
+                } else {
+                    $$('#dialog_title').text("您还未登陆");
+                }
+                let dialog = new mdui.Dialog('#redirectToLoginDialog');
+                let temp = document.getElementById('redirectToLoginDialog');
+                temp.addEventListener('closed.mdui.dialog', function () {
+                    window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
+                    console.log('redirect to login');
+                    return false
+                });
+                temp.addEventListener('confirm.mdui.dialog', function () {
+                    window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
+                    console.log('redirect to login');
+                    return false
+                });
+                dialog.open();
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    $$.ajax({
+        method: 'GET',
+        url: './department/' + did + '/course/' + cid + '/question?page=' + currentPage,
+        success: function (data, textStatus, xhr) {
+            let li = JSON.parse(xhr.responseText);
+            let list = document.getElementById('list');
+            li.forEach(function (it) {
+                let listItem = document.createElement('li');
+                let div = document.createElement('div');
+                div.setAttribute("class", "mdui-list-item mdui-ripple mdui-card");
+                div.setAttribute("style", "padding: 10px;font-weight: 400;");
+                let url = document.createElement('a');
+                url.setAttribute('href', './question.html?department=' + did + '&course=' + cid + '&question=' + it['questionId']);
+                url.setAttribute('style', 'width: 100%;');
+                url.innerText = it['questionTitle'];
+                div.appendChild(url);
+                listItem.appendChild(div);
+                list.appendChild(listItem);
+            });
+            if (currentPage === 1) {
+                document.getElementById('previous-button').setAttribute('disabled', '');
+            }
+            if (currentPage === totPage) {
+                document.getElementById('next-button').setAttribute('disabled', '');
+            }
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+                if (window.localStorage.getItem('token')) {
+                    $$('#dialog_title').text("登陆已过期");
+                } else {
+                    $$('#dialog_title').text("您还未登陆");
+                }
+                let dialog = new mdui.Dialog('#redirectToLoginDialog');
+                let temp = document.getElementById('redirectToLoginDialog');
+                temp.addEventListener('closed.mdui.dialog', function () {
+                    window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
+                    console.log('redirect to login');
+                    return false
+                });
+                temp.addEventListener('confirm.mdui.dialog', function () {
+                    window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
+                    console.log('redirect to login');
+                    return false
+                });
+                dialog.open();
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    $$.ajax({
+        method: 'GET',
+        url: './message/count',
+        success: function (data, textStatus, xhr) {
+            let count = parseInt(xhr.responseText);
+            document.getElementById('new-message').innerText = '新消息：' + count + '条';
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    function logout() {
+        $$.ajax({
+            method: 'POST',
+            url: './user/logout',
+            success: function (data, textStatus, xhr) {
+
+            },
+            error: function (xhr, textStatus) {
+                if (xhr.status === 403) {
+
+                } else {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                }
+            }
+        });
+        window.localStorage.clear();
+        location.reload();
+    }
+
+    function nextPage() {
+        window.location.href = './course.html?department=' + did + '&course=' + cid + '&page=' + (currentPage + 1);
+    }
+
+    function previousPage() {
+        window.location.href = './course.html?department=' + did + '&course=' + cid + '&page=' + (currentPage - 1);
+    }
+
+
+</script>
+<header class="mdui-appbar mdui-appbar-fixed">
+    <div class="mdui-toolbar mdui-color-theme">
+        <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
+        <a class="mdui-typo-title" href="">问题</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <button class="mdui-btn" href="./messages.html" id="new-message"></button>
+        <button class="mdui-btn" onclick="logout()">登出</button>
+    </div>
+</header>
+<br><br><br>
+<div class="mdui-container">
+
+    <div class="mdui-list" id="list" style="font-size: 20px">
+
+    </div>
+
+    <div class="mdui-dialog" id="redirectToLoginDialog">
+        <div class="mdui-dialog-title" id="dialog_title">您还未登陆</div>
+        <div class="mdui-dialog-content">点击确认跳转至登陆页面!</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+        </div>
+    </div>
+    <div class="mdui-center mdui-text-center" id="page-info" style="font-size: 15px"></div>
+    <div>
+        <button class="mdui-btn" id="previous-button" onclick="previousPage()"><i class="mdui-icon material-icons">&#xe5cb;</i>上一页
+        </button>
+        <button class="mdui-btn" id="next-button" onclick="nextPage()" style="float: right">下一页<i
+                class="mdui-icon material-icons">&#xe5cc;</i>
+        </button>
+    </div>
+    <button class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '提问题'}">
+        <i class="mdui-icon material-icons">add</i>
+    </button>
+</div>
 </body>
 </html>
