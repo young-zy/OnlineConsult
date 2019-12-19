@@ -77,4 +77,12 @@ public class QuestionService {
         });
         return true;
     }
+
+    @Transactional
+    public boolean answer(int did, int cid, int qid, String content, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.TEACHER);
+        int uid = loginService.getUid(token);
+        questionRepo.answer(did, cid, qid, content, uid);
+        return true;
+    }
 }

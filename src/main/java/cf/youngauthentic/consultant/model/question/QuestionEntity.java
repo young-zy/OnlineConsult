@@ -17,6 +17,7 @@ public class QuestionEntity {
     private String questionTitle;
     private String questionContent;
     private String answerContent;
+    private int answererUid;
     private Timestamp createTime;
     private CourseEntity course;
     private UserEntity questioner;
@@ -92,6 +93,16 @@ public class QuestionEntity {
         this.createTime = createTime;
     }
 
+    @Basic
+    @Column(name = "answer_uid")
+    public int getAnswererUid() {
+        return answererUid;
+    }
+
+    public void setAnswererUid(int answererUid) {
+        this.answererUid = answererUid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,7 +145,7 @@ public class QuestionEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "answer_uid", referencedColumnName = "uid", nullable = false)
+    @JoinColumn(name = "answer_uid", referencedColumnName = "uid", nullable = false, insertable = false, updatable = false)
     public UserEntity getAnswerer() {
         return answerer;
     }

@@ -6,6 +6,7 @@ import cf.youngauthentic.consultant.model.question.QuestionEntityPK;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
 import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -21,4 +22,8 @@ public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEnt
 
     @Query("select max(question.questionId) from QuestionEntity question where question.departmentId=?1 and question.courseId=?2")
     int findQuestionId(int did, int cid);
+
+    @Modifying
+    @Query("update QuestionEntity q set q.answerContent = ?4 , q.answererUid=?5 where q.departmentId = ?1 and q.courseId=?2 and q.questionId=?3")
+    void answer(int did, int cid, int qid, String content, int uid);
 }

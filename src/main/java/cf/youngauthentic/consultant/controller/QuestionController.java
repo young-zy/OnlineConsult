@@ -1,5 +1,6 @@
 package cf.youngauthentic.consultant.controller;
 
+import cf.youngauthentic.consultant.model.AnswerRequestModel;
 import cf.youngauthentic.consultant.model.QuestionRequestModel;
 import cf.youngauthentic.consultant.model.ResponseModel;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
@@ -74,6 +75,23 @@ public class QuestionController {
                                                @RequestHeader(value = "token", defaultValue = "") String token) {
         try {
             questionService.saveQuestion(did, cid, question.getTitle(), question.getContent(), token);
+            return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/department/{did}/course/{cid}/question/{qid}/answer")
+    public ResponseEntity<Object> questionAnswer(@PathVariable int did,
+                                                 @PathVariable int cid,
+                                                 @PathVariable int qid,
+                                                 @RequestBody AnswerRequestModel answerRequestModel,
+                                                 @RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            questionService.answer(did, cid, qid, answerRequestModel.content, token);
             return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
