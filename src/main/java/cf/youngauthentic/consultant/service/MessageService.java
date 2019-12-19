@@ -2,7 +2,6 @@ package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.message.MessageEntity;
 import cf.youngauthentic.consultant.model.message.SimpleMessage;
-import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,12 @@ public class MessageService {
     LoginService loginService;
 
     @Transactional
-    public void addMessage(String title, QuestionEntity question, UserEntity userEntity) {
+    public void addMessage(String title, int departmentId, int courseId, int questionId, UserEntity userEntity) {
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setMessageTitle(title);
-        messageEntity.setDepartmentId(question.getDepartmentId());
-        messageEntity.setCourseId(question.getCourseId());
-        messageEntity.setQuestionId(question.getQuestionId());
+        messageEntity.setDepartmentId(departmentId);
+        messageEntity.setCourseId(courseId);
+        messageEntity.setQuestionId(questionId);
         messageEntity.setUid(userEntity.getUid());
         messageRepo.save(messageEntity);
     }

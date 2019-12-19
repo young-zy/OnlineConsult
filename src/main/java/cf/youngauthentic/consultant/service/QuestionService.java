@@ -3,7 +3,7 @@ package cf.youngauthentic.consultant.service;
 import cf.youngauthentic.consultant.model.question.QuestionEntity;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
 import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
-import cf.youngauthentic.consultant.model.teaches.TeachesEntity;
+import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.QuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,8 +22,10 @@ public class QuestionService {
     @Autowired
     QuestionRepo questionRepo;
 
+    //    @Autowired
+//    CourseService courseService;
     @Autowired
-    CourseService courseService;
+    TeachesService teachesService;
 
     @Autowired
     LoginService loginService;
@@ -66,11 +68,12 @@ public class QuestionService {
         question.setQuestionTitle(title);
         question.setQuestionContent(content);
         questionRepo.save(question);
-        question = questionRepo.findFirstByDepartmentIdEqualsAndCourseIdEqualsOrderByQuestionIdDesc(did, cid);
-        List<TeachesEntity> teachers = question.getCourse().getTeachers();
-        QuestionEntity finalQuestion = question;
+        int qid = questionRepo.findQuestionId(did, cid);
+//        question = questionRepo.findFirstByDepartmentIdEqualsAndCourseIdEqualsOrderByQuestionIdDesc(did, cid);
+        question.setQuestionId(qid);
+        List<UserEntity> teachers = teachesService.getTeachers(did, cid);
         teachers.forEach(it -> {
-            messageService.addMessage("新问题：" + finalQuestion.getQuestionTitle() + " 等待回答", finalQuestion, it.getTeacher());
+            messageService.addMessage("新问题：" + question.getQuestionTitle() + " 等待回答", did, cid, qid, it);
         });
         return true;
     }

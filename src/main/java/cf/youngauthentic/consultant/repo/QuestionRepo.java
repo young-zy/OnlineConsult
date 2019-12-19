@@ -6,6 +6,7 @@ import cf.youngauthentic.consultant.model.question.QuestionEntityPK;
 import cf.youngauthentic.consultant.model.question.QuestionForList;
 import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEnt
 
     QuestionWithSimpleUser findByDepartmentIdAndCourseIdAndQuestionId(int departmentId, int courseId, int questionId);
 
-    QuestionEntity findFirstByDepartmentIdEqualsAndCourseIdEqualsOrderByQuestionIdDesc(int departmentId, int courseId);
-
     int countAllByDepartmentIdAndCourseId(int departmentId, int courseId);
+
+    @Query("select max(question.questionId) from QuestionEntity question where question.departmentId=?1 and question.courseId=?2")
+    int findQuestionId(int did, int cid);
 }

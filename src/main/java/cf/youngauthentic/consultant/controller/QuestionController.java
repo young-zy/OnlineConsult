@@ -78,6 +78,7 @@ public class QuestionController {
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
