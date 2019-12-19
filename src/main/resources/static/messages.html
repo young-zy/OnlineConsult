@@ -114,6 +114,9 @@
                 let url = document.createElement('a');
                 url.setAttribute('href', './message.html?message=' + it['messageId']);
                 url.setAttribute('style', 'width: 100%; padding-top:18px; padding-bottom:18px');
+                if (!it['isAcknowledged']) {
+                    url.style.fontWeight = 'bold';
+                }
                 url.innerText = it['messageTitle'];
                 div.appendChild(url);
                 listItem.appendChild(div);
