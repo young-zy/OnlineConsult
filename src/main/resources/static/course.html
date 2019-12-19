@@ -113,10 +113,10 @@
                 let listItem = document.createElement('li');
                 let div = document.createElement('div');
                 div.setAttribute("class", "mdui-list-item mdui-ripple mdui-card");
-                div.setAttribute("style", "padding: 10px;font-weight: 400;");
+                div.setAttribute("style", "font-weight: 400;");
                 let url = document.createElement('a');
                 url.setAttribute('href', './question.html?department=' + did + '&course=' + cid + '&question=' + it['questionId']);
-                url.setAttribute('style', 'width: 100%;');
+                url.setAttribute('style', 'width: 100%; padding-top:18px; padding-bottom:18px');
                 url.innerText = it['questionTitle'];
                 div.appendChild(url);
                 listItem.appendChild(div);
@@ -219,11 +219,13 @@
     function addButtonClick() {
         $$('#overlay').addClass('mdui-overlay-show');
         $$('#page-questions-editor').addClass('mdui-dialog-open');
+        $$('#page-questions-editor').css('visibility', 'visible');
     }
 
     function dialogBlur() {
         $$('#page-questions-editor').removeClass('mdui-dialog-open');
         $$('#overlay').removeClass('mdui-overlay-show');
+        $$('#page-questions-editor').css('visibility', 'hidden');
     }
 
     function clearDialog() {
@@ -231,6 +233,7 @@
         $$('#content').empty();
         $$('#page-questions-editor').removeClass('mdui-dialog-open');
         $$('#overlay').removeClass('mdui-overlay-show');
+        $$('#page-questions-editor').css('visibility', 'hidden');
     }
 
     function submitQuestion() {
@@ -305,7 +308,7 @@
     </div>
 
     <div class="mdui-dialog mc-editor-dialog with-title" id="page-questions-editor"
-         style="display: block; top: 51.703px; height: 413.594px;">
+         style="display: block; top: 52px; height: 414px; visibility: hidden">
         <input class="title" id="title" maxlength="50" placeholder="问题标题" type="text">
         <div class="mc-editor">
             <div class="content mdui-typo content-empty passage-content" contenteditable="true" id="content"

@@ -112,10 +112,10 @@
                 let listItem = document.createElement('li');
                 let div = document.createElement('div');
                 div.setAttribute("class", "mdui-list-item mdui-ripple mdui-card");
-                div.setAttribute("style", "padding: 10px;font-weight: 400;");
+                div.setAttribute("style", "font-weight: 400;");
                 let url = document.createElement('a');
                 url.setAttribute('href', './course.html?department=' + did + '&course=' + it['courseId']);
-                url.setAttribute('style', 'width: 100%;');
+                url.setAttribute('style', 'width: 100%; padding-top:18px; padding-bottom:18px');
                 url.innerText = it['cname'];
                 div.appendChild(url);
                 listItem.appendChild(div);
