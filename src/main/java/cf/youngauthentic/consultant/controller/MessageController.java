@@ -6,10 +6,7 @@ import cf.youngauthentic.consultant.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,6 +46,19 @@ public class MessageController {
         try {
             int count = messageService.getMessageCount(token);
             return new ResponseEntity<>(count, HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = "/message/{mid}")
+    public ResponseEntity<Object> getMessage(@RequestHeader(value = "token", defaultValue = "") String token,
+                                             @PathVariable int mid
+    ) {
+        try {
+            return new ResponseEntity<>(messageService.getMessage(mid, token), HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {

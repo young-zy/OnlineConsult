@@ -70,6 +70,7 @@ public class MessageService {
             messageEntity.setQuestionId(simpleMessage.getQuestionId());
             messageEntity.setMessageTitle(simpleMessage.getMessageTitle());
             messageEntity.setIsAcknowledged(1);
+            messageEntity.setUid(uid);
             messageRepo.save(messageEntity);
             return simpleMessage;
         }
