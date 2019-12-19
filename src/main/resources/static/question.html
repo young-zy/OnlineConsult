@@ -298,7 +298,7 @@
          style="display: block; top: 52px; height: 414px; visibility: hidden">
         <div class="mc-editor" style="margin-top: 25px; margin-bottom: 25px;height: 364px">
             <div class="content mdui-typo content-empty passage-content" contenteditable="true" id="ansContent"
-                 placeholder="回答内容"></div>
+                 placeholder="回答内容（支持markdown）"></div>
             <div class="toolbar">
                 <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true"
                         onclick="dialogBlur()">
@@ -348,7 +348,7 @@
     </div>
     <div class="mdui-overlay" id="overlay" onclick="dialogBlur()" style="z-index: 5100;"></div>
     <button class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple" id="addButton"
-            mdui-tooltip="{content: '提问题'}" onclick="addButtonClick()" style="visibility: hidden">
+            mdui-tooltip="{content: '回答'}" onclick="addButtonClick()" style="visibility: hidden">
         <i class="mdui-icon material-icons">add</i>
     </button>
 </div>
