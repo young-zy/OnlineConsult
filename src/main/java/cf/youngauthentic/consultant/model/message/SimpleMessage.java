@@ -4,6 +4,8 @@ import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types = MessageEntity.class)
 public interface SimpleMessage {
+    int getMessageId();
+
     int getUid();
 
     int getDepartmentId();
