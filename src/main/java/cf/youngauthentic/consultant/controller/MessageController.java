@@ -35,7 +35,7 @@ public class MessageController {
                                                  @RequestParam(value = "page", defaultValue = "1") String pageStr) {
         try {
             int page = Integer.parseInt(pageStr);
-            List<SimpleMessage> messages = messageService.getMessages(token, page);
+            List<SimpleMessage> messages = messageService.getMessages(token, --page);
             return new ResponseEntity<>(messages, HttpStatus.OK);
         } catch (AuthException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
