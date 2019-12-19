@@ -60,6 +60,7 @@
             $$('#title').append(title);
             $$('#content').append(res);
             if (hasans) {
+                document.getElementById('answer').style.visibility = "visible";
                 let answererName = question['answerer']['username'];
                 let answererAuth = question['answerer']['authority'];
                 let answerContent = question['answerContent'];
@@ -136,7 +137,7 @@
         success: async function (data, textStatus, xhr) {
             let temp = JSON.parse(xhr.responseText);
             let auth = temp['auth'];
-            await sleep(3000);
+            await sleep(2000);
             if (!hasans && (auth === 'teacher' || auth === 'admin')) {
                 document.getElementById('addButton').style.visibility = "visible";
             }
@@ -270,7 +271,7 @@
         </div>
 
     </div>
-    <div class="mdui-card" id="answer" style="margin-bottom: 50px">
+    <div class="mdui-card" id="answer" style="margin-bottom: 50px;visibility: hidden">
         <div class="mdui-card-header">
             <img class="mdui-card-header-avatar" src="./avatar.png"/>
             <div class="mdui-card-header-title" id="answererUsername"></div>
