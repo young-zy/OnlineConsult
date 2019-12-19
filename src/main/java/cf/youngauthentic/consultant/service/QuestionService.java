@@ -70,7 +70,7 @@ public class QuestionService {
         List<TeachesEntity> teachers = question.getCourse().getTeachers();
         QuestionEntity finalQuestion = question;
         teachers.forEach(it -> {
-            messageService.addMessage("", finalQuestion, it.getTeacher());
+            messageService.addMessage("新问题：" + finalQuestion.getQuestionTitle() + " 等待回答", finalQuestion, it.getTeacher());
         });
         return true;
     }
