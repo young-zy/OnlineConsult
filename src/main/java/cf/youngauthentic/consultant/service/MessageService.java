@@ -28,8 +28,10 @@ public class MessageService {
     public void addMessage(String title, QuestionEntity question, UserEntity userEntity) {
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setMessageTitle(title);
-        messageEntity.setQuestion(question);
-        messageEntity.setUser(userEntity);
+        messageEntity.setDepartmentId(question.getDepartmentId());
+        messageEntity.setCourseId(question.getCourseId());
+        messageEntity.setQuestionId(question.getQuestionId());
+        messageEntity.setUid(userEntity.getUid());
         messageRepo.save(messageEntity);
     }
 
