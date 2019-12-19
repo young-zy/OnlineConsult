@@ -55,6 +55,7 @@ public class MessageService {
         return messageRepo.countAllByUid(uid);
     }
 
+    @Transactional
     public SimpleMessage getMessage(int mid, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);
         int uid = loginService.getUid(token);
@@ -62,15 +63,7 @@ public class MessageService {
         if (simpleMessage.getUid() != uid) {
             throw new AuthException("权限不足");
         } else {
-            MessageEntity messageEntity = new MessageEntity();
-            messageEntity.setMessageId(mid);
-            messageEntity.setDepartmentId(simpleMessage.getDepartmentId());
-            messageEntity.setCourseId(simpleMessage.getCourseId());
-            messageEntity.setQuestionId(simpleMessage.getQuestionId());
-            messageEntity.setMessageTitle(simpleMessage.getMessageTitle());
-            messageEntity.setIsAcknowledged(1);
-            messageEntity.setUid(uid);
-            messageRepo.save(messageEntity);
+            messageRepo.acknowledge(simpleMessage.getMessageId());
             return simpleMessage;
         }
 
