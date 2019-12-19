@@ -41,12 +41,14 @@
     let did = parseInt(getQueryVariable('department'));
     let cid = parseInt(getQueryVariable('course'));
     let qid = parseInt(getQueryVariable('question'));
+    let hasans = null;
 
     $$.ajax({
         method: 'GET',
         url: './department/' + did + '/course/' + cid + '/question/' + qid,
         success: function (data, textStatus, xhr) {
             let question = JSON.parse(xhr.responseText);
+            hasans = question['answerContent'] != null;
             let converter = new showdown.Converter();
             let username = question['questioner']['username'];
             let auth = question['questioner']['authority'];
@@ -57,6 +59,14 @@
             $$('#auth').append(auth);
             $$('#title').append(title);
             $$('#content').append(res);
+            if (hasans) {
+                let answererName = question['answerer']['username'];
+                let answererAuth = question['answerer']['authority'];
+                let answerContent = question['answerContent'];
+                $$('#answererUsername').append(answererName);
+                $$('#answererAuth').append(answererAuth);
+                $$('#answerContent').append(answerContent);
+            }
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {
@@ -116,6 +126,38 @@
         }
     });
 
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    $$.ajax({
+        method: 'GET',
+        url: './user/auth',
+        success: async function (data, textStatus, xhr) {
+            let temp = JSON.parse(xhr.responseText);
+            let auth = temp['auth'];
+            await sleep(3000);
+            if (!hasans && (auth === 'teacher' || auth === 'admin')) {
+                document.getElementById('addButton').style.visibility = "visible";
+            }
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
     function logout() {
         $$.ajax({
             method: 'POST',
@@ -141,6 +183,60 @@
         });
         window.localStorage.clear();
         location.reload();
+    }
+
+    function addButtonClick() {
+        $$('#overlay').addClass('mdui-overlay-show');
+        $$('#page-questions-editor').addClass('mdui-dialog-open');
+        $$('#page-questions-editor').css('visibility', 'visible');
+    }
+
+    function dialogBlur() {
+        $$('#page-questions-editor').removeClass('mdui-dialog-open');
+        $$('#overlay').removeClass('mdui-overlay-show');
+        $$('#page-questions-editor').css('visibility', 'hidden');
+    }
+
+    function clearDialog() {
+        $$('#title').val('');
+        $$('#content').empty();
+        $$('#page-questions-editor').removeClass('mdui-dialog-open');
+        $$('#overlay').removeClass('mdui-overlay-show');
+        $$('#page-questions-editor').css('visibility', 'hidden');
+    }
+
+    function submitAnswer() {
+        let temp = {
+            content: document.getElementById('ansContent').innerText
+        };
+        $$.ajax({
+            method: 'POST',
+            url: `./department/${did}/course/${cid}/question/${qid}/answer`,
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(temp),
+            success: function (data, textStatus, xhr) {
+                mdui.snackbar({
+                    message: "提交成功,正在刷新",
+                    position: 'top',
+                    timeout: 2000,
+                    onClosed: function () {
+                        window.location.reload();
+                    }
+                });
+            },
+            error: function (xhr, textStatus) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        });
     }
 </script>
 <header class="mdui-appbar mdui-appbar-fixed">
@@ -174,6 +270,18 @@
         </div>
 
     </div>
+    <div class="mdui-card" id="answer" style="margin-bottom: 50px">
+        <div class="mdui-card-header">
+            <img class="mdui-card-header-avatar" src="./avatar.png"/>
+            <div class="mdui-card-header-title" id="answererUsername"></div>
+            <div class="mdui-card-header-subtitle" id="answererAuth"></div>
+
+        </div>
+        <div class="mdui-card-content" id="answerContent">
+
+        </div>
+
+    </div>
 
 
     <div class="mdui-dialog" id="redirectToLoginDialog">
@@ -184,6 +292,64 @@
         </div>
     </div>
     <div class="mdui-center mdui-text-center" id="page-info" style="font-size: 15px"></div>
+
+    <div class="mdui-dialog mc-editor-dialog with-title" id="page-questions-editor"
+         style="display: block; top: 52px; height: 414px; visibility: hidden">
+        <div class="mc-editor" style="margin-top: 25px; margin-bottom: 25px;height: 364px">
+            <div class="content mdui-typo content-empty passage-content" contenteditable="true" id="ansContent"
+                 placeholder="回答内容"></div>
+            <div class="toolbar">
+                <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true"
+                        onclick="dialogBlur()">
+                    <i class="mdui-icon material-icons">close</i>
+                </button>
+                <div class="mdui-toolbar-spacer"></div>
+                <button class="submit-text mdui-btn mdui-btn-raised mdui-color-indigo mdui-color-theme"
+                        onclick="submitAnswer()" type="button">
+                    发布
+                </button>
+                <button class="submit-icon mdui-btn mdui-btn-icon mdui-text-color-indigo mdui-text-color-theme"
+                        onclick="submitAnswer()" type="button">
+                    <i class="mdui-icon material-icons">send</i>
+                </button>
+                <!--                <button class="mdui-btn menu menu-bold" type="button" title="粗体">-->
+                <!--                    <i class="mdui-icon material-icons">format_bold</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-italic" type="button" title="斜体">-->
+                <!--                    <i class="mdui-icon material-icons">format_italic</i>-->
+                <!--                </button>-->
+                <!--                <div class="divider"></div>-->
+                <!--                <button class="mdui-btn menu menu-head" type="button" title="标题">-->
+                <!--                    <i class="mdui-icon material-icons">title</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-code" type="button" title="代码块">-->
+                <!--                    <i class="mdui-icon material-icons">code</i></button>-->
+                <!--                <button class="mdui-btn menu menu-ol" type="button" title="有序列表">-->
+                <!--                    <i class="mdui-icon material-icons">format_list_numbered</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-ul" type="button" title="无序列表">-->
+                <!--                    <i class="mdui-icon material-icons">format_list_bulleted</i>-->
+                <!--                </button>-->
+                <!--                <div class="divider"></div>-->
+                <!--                <button class="mdui-btn menu menu-link" type="button" title="插入链接">-->
+                <!--                    <i class="mdui-icon material-icons">link</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-image" type="button" title="插入图片">-->
+                <!--                    <i class="mdui-icon material-icons">image</i>-->
+                <!--                </button>-->
+                <div class="mdui-toolbar-spacer"></div>
+                <div class="divider"></div>
+                <button class="mdui-btn menu menu-clear_drafts" onclick="clearDialog()" title="舍弃草稿" type="button">
+                    <i class="mdui-icon material-icons">delete</i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="mdui-overlay" id="overlay" onclick="dialogBlur()" style="z-index: 5100;"></div>
+    <button class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple" id="addButton"
+            mdui-tooltip="{content: '提问题'}" onclick="addButtonClick()" style="visibility: hidden">
+        <i class="mdui-icon material-icons">add</i>
+    </button>
 </div>
 </body>
 </html>
