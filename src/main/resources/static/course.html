@@ -7,6 +7,7 @@
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <title>问题</title>
     <link href="./css/mdui.min.css" rel="stylesheet" type="text/css">
+    <link href="./css/app.css" rel="stylesheet" type="text/css">
     <script src="./js/mdui.min.js"></script>
 </head>
 
@@ -215,6 +216,23 @@
         window.location.href = './course.html?department=' + did + '&course=' + cid + '&page=' + (currentPage - 1);
     }
 
+    function addButtonClick() {
+        $$('#overlay').addClass('mdui-overlay-show');
+        $$('#page-questions-editor').addClass('mdui-dialog-open');
+    }
+
+    function dialogBlur() {
+        $$('#page-questions-editor').removeClass('mdui-dialog-open');
+        $$('#overlay').removeClass('mdui-overlay-show');
+    }
+
+    function clearDialog() {
+        $$('#title').val('');
+        $$('#content').empty();
+        $$('#page-questions-editor').removeClass('mdui-dialog-open');
+        $$('#overlay').removeClass('mdui-overlay-show');
+    }
+
 
 </script>
 <header class="mdui-appbar mdui-appbar-fixed">
@@ -248,7 +266,62 @@
                 class="mdui-icon material-icons">&#xe5cc;</i>
         </button>
     </div>
-    <button class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '提问题'}">
+
+    <div class="mdui-dialog mc-editor-dialog with-title" id="page-questions-editor"
+         style="display: block; top: 51.703px; height: 413.594px;">
+        <input class="title" id="title" maxlength="50" placeholder="问题标题" type="text">
+        <div class="mc-editor">
+            <div class="content mdui-typo content-empty passage-content" contenteditable="true" id="content"
+                 placeholder="问题详细信息"></div>
+            <div class="toolbar">
+                <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true">
+                    <i class="mdui-icon material-icons">close</i>
+                </button>
+                <div class="mdui-toolbar-spacer"></div>
+                <button class="submit-text mdui-btn mdui-btn-raised mdui-color-indigo mdui-color-theme" type="button">
+                    发布
+                </button>
+                <button class="submit-icon mdui-btn mdui-btn-icon mdui-text-color-indigo mdui-text-color-theme"
+                        type="button">
+                    <i class="mdui-icon material-icons">send</i>
+                </button>
+                <!--                <button class="mdui-btn menu menu-bold" type="button" title="粗体">-->
+                <!--                    <i class="mdui-icon material-icons">format_bold</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-italic" type="button" title="斜体">-->
+                <!--                    <i class="mdui-icon material-icons">format_italic</i>-->
+                <!--                </button>-->
+                <!--                <div class="divider"></div>-->
+                <!--                <button class="mdui-btn menu menu-head" type="button" title="标题">-->
+                <!--                    <i class="mdui-icon material-icons">title</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-code" type="button" title="代码块">-->
+                <!--                    <i class="mdui-icon material-icons">code</i></button>-->
+                <!--                <button class="mdui-btn menu menu-ol" type="button" title="有序列表">-->
+                <!--                    <i class="mdui-icon material-icons">format_list_numbered</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-ul" type="button" title="无序列表">-->
+                <!--                    <i class="mdui-icon material-icons">format_list_bulleted</i>-->
+                <!--                </button>-->
+                <!--                <div class="divider"></div>-->
+                <!--                <button class="mdui-btn menu menu-link" type="button" title="插入链接">-->
+                <!--                    <i class="mdui-icon material-icons">link</i>-->
+                <!--                </button>-->
+                <!--                <button class="mdui-btn menu menu-image" type="button" title="插入图片">-->
+                <!--                    <i class="mdui-icon material-icons">image</i>-->
+                <!--                </button>-->
+                <div class="mdui-toolbar-spacer"></div>
+                <div class="divider"></div>
+                <button class="mdui-btn menu menu-clear_drafts" onclick="clearDialog()" title="舍弃草稿" type="button">
+                    <i class="mdui-icon material-icons">delete</i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="mdui-overlay" id="overlay" onclick="dialogBlur()" style="z-index: 5100;"></div>
+    <button class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '提问题'}"
+            onclick="addButtonClick()">
         <i class="mdui-icon material-icons">add</i>
     </button>
 </div>
