@@ -98,7 +98,7 @@
 
 .mc-editor .toolbar .divider {
     width: 1px;
-    width: 0.8px;
+    /*width: 0.8px;*/
     background-color: #e5e5e5;
     margin: 0 6px;
     height: 28px;
