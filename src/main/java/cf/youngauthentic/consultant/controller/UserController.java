@@ -29,6 +29,19 @@ public class UserController {
         return userService.getUser(uid);
     }
 
+    @GetMapping(path = "/user/auth")
+    public @ResponseBody
+    ResponseEntity<Object> getAuth(@RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            return new ResponseEntity<>(new GetAuthResponseModel(true, "", userService.getAuth(token)), HttpStatus.ACCEPTED);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @PostMapping(path = "/user/{uid}/password")
     public ResponseEntity<Object> setPassword(@PathVariable int uid,
                                               @RequestBody SetPasswordRequestModel req,

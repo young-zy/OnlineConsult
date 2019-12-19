@@ -21,6 +21,9 @@ public class UserService {
     private UserRepo userRepository;
 
     @Autowired
+    private LoginService loginService;
+
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     public UserEntity getUser(int uid) {
@@ -69,5 +72,9 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
+    public String getAuth(String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
+        return loginService.getAuthority(token);
+    }
 
 }
