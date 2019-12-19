@@ -7,4 +7,6 @@ public interface SimpleUser {
     int getUid();
 
     String getUsername();
+
+    String getAuthority();
 }
