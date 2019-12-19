@@ -233,6 +233,41 @@
         $$('#overlay').removeClass('mdui-overlay-show');
     }
 
+    function submitQuestion() {
+        let temp = {
+            title: $$('#title').val(),
+            content: document.getElementById('content').innerText
+        };
+        $$.ajax({
+            method: 'POST',
+            url: `./department/${did}/course/${cid}/question`,
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(temp),
+            success: function (data, textStatus, xhr) {
+                mdui.snackbar({
+                    message: "提交成功,正在刷新",
+                    position: 'top',
+                    timeout: 2000,
+                    onClosed: function () {
+                        window.location.reload();
+                    }
+                });
+            },
+            error: function (xhr, textStatus) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+
+            }
+        });
+    }
 
 </script>
 <header class="mdui-appbar mdui-appbar-fixed">
@@ -272,13 +307,14 @@
         <input class="title" id="title" maxlength="50" placeholder="问题标题" type="text">
         <div class="mc-editor">
             <div class="content mdui-typo content-empty passage-content" contenteditable="true" id="content"
-                 placeholder="问题详细信息"></div>
+                 placeholder="问题详细信息(兼容markdown)"></div>
             <div class="toolbar">
                 <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true">
                     <i class="mdui-icon material-icons">close</i>
                 </button>
                 <div class="mdui-toolbar-spacer"></div>
-                <button class="submit-text mdui-btn mdui-btn-raised mdui-color-indigo mdui-color-theme" type="button">
+                <button class="submit-text mdui-btn mdui-btn-raised mdui-color-indigo mdui-color-theme"
+                        onclick="submitQuestion()" type="button">
                     发布
                 </button>
                 <button class="submit-icon mdui-btn mdui-btn-icon mdui-text-color-indigo mdui-text-color-theme"
