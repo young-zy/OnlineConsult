@@ -26,4 +26,8 @@ public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEnt
     @Modifying
     @Query("update QuestionEntity q set q.answerContent = ?4 , q.answererUid=?5 where q.departmentId = ?1 and q.courseId=?2 and q.questionId=?3")
     void answer(int did, int cid, int qid, String content, int uid);
+
+    @Query("select q.questionUid from QuestionEntity q where q.departmentId = ?1 and q.courseId = ?2 and q.questionId = ?3")
+    int getQuestionerUid(int did, int cid, int qid);
+
 }

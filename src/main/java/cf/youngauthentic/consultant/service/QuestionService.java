@@ -64,7 +64,7 @@ public class QuestionService {
         QuestionEntity question = new QuestionEntity();
         question.setDepartmentId(did);
         question.setCourseId(cid);
-        question.setQuestioner(userService.getUser(uid));
+        question.setQuestionUid(uid);
         question.setQuestionTitle(title);
         question.setQuestionContent(content);
         questionRepo.save(question);
@@ -73,7 +73,7 @@ public class QuestionService {
         question.setQuestionId(qid);
         List<UserEntity> teachers = teachesService.getTeachers(did, cid);
         teachers.forEach(it -> {
-            messageService.addMessage("新问题：" + question.getQuestionTitle() + " 等待回答", did, cid, qid, it);
+            messageService.addMessage("新问题：" + question.getQuestionTitle() + " 等待回答", did, cid, qid, it.getUid());
         });
         return true;
     }
@@ -83,6 +83,8 @@ public class QuestionService {
         loginService.hasAuth(token, Auth.TEACHER);
         int uid = loginService.getUid(token);
         questionRepo.answer(did, cid, qid, content, uid);
+        QuestionWithSimpleUser question = questionRepo.findByDepartmentIdAndCourseIdAndQuestionId(did, cid, qid);
+        messageService.addMessage("问题：" + question.getQuestionTitle() + "有新的回答", did, cid, qid, question.getQuestioner().getUid());
         return true;
     }
 }
