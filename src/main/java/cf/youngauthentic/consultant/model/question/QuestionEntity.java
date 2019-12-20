@@ -17,10 +17,8 @@ public class QuestionEntity {
     private String questionTitle;
     private String questionContent;
     private String answerContent;
-    private int answererUid;
+    private Integer answererUid;
     private int questionUid;
-
-
     private Timestamp createTime;
     private CourseEntity course;
     private UserEntity questioner;
@@ -97,12 +95,12 @@ public class QuestionEntity {
     }
 
     @Basic
-    @Column(name = "answer_uid")
-    public int getAnswererUid() {
+    @Column(name = "answer_uid", nullable = true)
+    public Integer getAnswererUid() {
         return answererUid;
     }
 
-    public void setAnswererUid(int answererUid) {
+    public void setAnswererUid(Integer answererUid) {
         this.answererUid = answererUid;
     }
 
@@ -112,7 +110,7 @@ public class QuestionEntity {
         return questionUid;
     }
 
-    public void setQuestionUid(int questionUid) {
+    public void setQuestionUid(Integer questionUid) {
         this.questionUid = questionUid;
     }
 
@@ -124,15 +122,15 @@ public class QuestionEntity {
         return departmentId == that.departmentId &&
                 courseId == that.courseId &&
                 questionId == that.questionId &&
+                questionUid == that.questionUid &&
                 Objects.equals(questionTitle, that.questionTitle) &&
                 Objects.equals(questionContent, that.questionContent) &&
-                Objects.equals(answerContent, that.answerContent) &&
-                Objects.equals(createTime, that.createTime);
+                Objects.equals(answerContent, that.answerContent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(departmentId, courseId, questionId, questionTitle, questionContent, answerContent, createTime);
+        return Objects.hash(departmentId, courseId, questionId, questionUid, questionTitle, questionContent, answerContent);
     }
 
     @ManyToOne

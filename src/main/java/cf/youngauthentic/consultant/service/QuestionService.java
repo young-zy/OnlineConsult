@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -57,12 +56,13 @@ public class QuestionService {
      * @throws AuthException when has no auth
      */
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+//    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Boolean saveQuestion(int did, int cid, String title, String content, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);
         int uid = loginService.getUid(token);
         QuestionEntity question = new QuestionEntity();
         question.setDepartmentId(did);
+        question.setAnswererUid(null);
         question.setCourseId(cid);
         question.setQuestionUid(uid);
         question.setQuestionTitle(title);
