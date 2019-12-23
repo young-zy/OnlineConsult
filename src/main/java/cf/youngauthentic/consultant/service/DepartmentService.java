@@ -3,7 +3,6 @@ package cf.youngauthentic.consultant.service;
 import cf.youngauthentic.consultant.model.department.DepartmentWithCourse;
 import cf.youngauthentic.consultant.model.department.DepartmentWithoutCourse;
 import cf.youngauthentic.consultant.repo.DepartmentRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,11 +12,14 @@ import java.util.List;
 
 @Service
 public class DepartmentService {
-    @Autowired
-    private DepartmentRepo departmentRepo;
+    private final DepartmentRepo departmentRepo;
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
+
+    public DepartmentService(DepartmentRepo departmentRepo, LoginService loginService) {
+        this.departmentRepo = departmentRepo;
+        this.loginService = loginService;
+    }
 
     public List<DepartmentWithoutCourse> getDepartments(String token, int page) throws Exception {
         loginService.hasAuth(token, Auth.STUDENT);

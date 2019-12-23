@@ -5,7 +5,6 @@ import cf.youngauthentic.consultant.model.question.QuestionForList;
 import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.QuestionRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -15,22 +14,30 @@ import java.util.List;
 
 @Service
 public class QuestionService {
-    @Autowired
+    final
     MessageService messageService;
 
-    @Autowired
+    final
     QuestionRepo questionRepo;
 
     //    @Autowired
 //    CourseService courseService;
-    @Autowired
+    final
     TeachesService teachesService;
 
-    @Autowired
+    final
     LoginService loginService;
 
-    @Autowired
+    final
     UserService userService;
+
+    public QuestionService(MessageService messageService, QuestionRepo questionRepo, TeachesService teachesService, LoginService loginService, UserService userService) {
+        this.messageService = messageService;
+        this.questionRepo = questionRepo;
+        this.teachesService = teachesService;
+        this.loginService = loginService;
+        this.userService = userService;
+    }
 
     public List<QuestionForList> getQuestions(int did, int cid, int page, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);

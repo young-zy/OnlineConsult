@@ -5,7 +5,6 @@ import cf.youngauthentic.consultant.service.Auth;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.LoginService;
 import cf.youngauthentic.consultant.service.TeachesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +14,16 @@ import java.util.List;
 @RestController
 public class TeacherController {
 
-    @Autowired
+    final
     TeachesService teachesService;
 
-    @Autowired
+    final
     LoginService loginService;
+
+    public TeacherController(TeachesService teachesService, LoginService loginService) {
+        this.teachesService = teachesService;
+        this.loginService = loginService;
+    }
 
     @GetMapping(path = "/department/{did}/course/{cid}/teacher")
     public ResponseEntity<Object> getTeachers(@PathVariable int did,

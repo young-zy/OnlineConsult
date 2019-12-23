@@ -7,7 +7,6 @@ import cf.youngauthentic.consultant.model.question.QuestionForList;
 import cf.youngauthentic.consultant.model.question.QuestionWithSimpleUser;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,12 @@ import java.util.List;
 @RestController
 public class QuestionController {
 
-    @Autowired
+    final
     QuestionService questionService;
+
+    public QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @GetMapping("/department/{did}/course/{cid}/question")
     public ResponseEntity<Object> getQuestions(@PathVariable int did,

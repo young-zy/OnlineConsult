@@ -3,7 +3,6 @@ package cf.youngauthentic.consultant.service;
 import cf.youngauthentic.consultant.model.teaches.TeachesEntity;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.TeachesRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +12,16 @@ import java.util.List;
 @Service
 public class TeachesService {
 
-    @Autowired
+    private final
     UserService userService;
 
-    @Autowired
+    private final
     TeachesRepo teachesRepo;
+
+    public TeachesService(UserService userService, TeachesRepo teachesRepo) {
+        this.userService = userService;
+        this.teachesRepo = teachesRepo;
+    }
 
 
     public void addTeacher(int did, int cid, int uid) {

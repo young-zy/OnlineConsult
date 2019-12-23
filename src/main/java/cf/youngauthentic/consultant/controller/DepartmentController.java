@@ -2,7 +2,6 @@ package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.ResponseModel;
 import cf.youngauthentic.consultant.service.DepartmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentService departmentService;
+    private final DepartmentService departmentService;
+
+    public DepartmentController(DepartmentService departmentService) {
+        this.departmentService = departmentService;
+    }
 
     @GetMapping(path = "/department")
     public ResponseEntity<Object> getDepartments(@RequestHeader(defaultValue = "") String token,

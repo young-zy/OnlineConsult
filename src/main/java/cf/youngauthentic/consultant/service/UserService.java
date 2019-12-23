@@ -5,7 +5,6 @@ import cf.youngauthentic.consultant.model.user.SimpleUser;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +16,17 @@ public class UserService {
 
     Gson gson = new Gson();
 
-    @Autowired
-    private UserRepo userRepository;
+    private final UserRepo userRepository;
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
+
+    public UserService(UserRepo userRepository, LoginService loginService, StringRedisTemplate stringRedisTemplate) {
+        this.userRepository = userRepository;
+        this.loginService = loginService;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     private SimpleUser getUser(int uid) {
         return userRepository.findByUid(uid);

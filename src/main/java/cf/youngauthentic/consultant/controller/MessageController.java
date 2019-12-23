@@ -3,7 +3,6 @@ package cf.youngauthentic.consultant.controller;
 import cf.youngauthentic.consultant.model.message.SimpleMessage;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +11,12 @@ import java.util.List;
 
 @RestController
 public class MessageController {
-    @Autowired
+    final
     MessageService messageService;
+
+    public MessageController(MessageService messageService) {
+        this.messageService = messageService;
+    }
 
     @GetMapping(path = "/message/count/unread")
     public ResponseEntity<Object> getUnreadMessageCount(@RequestHeader(value = "token", defaultValue = "") String token) {

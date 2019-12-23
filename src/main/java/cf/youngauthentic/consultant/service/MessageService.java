@@ -3,7 +3,6 @@ package cf.youngauthentic.consultant.service;
 import cf.youngauthentic.consultant.model.message.MessageEntity;
 import cf.youngauthentic.consultant.model.message.SimpleMessage;
 import cf.youngauthentic.consultant.repo.MessageRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,14 +12,20 @@ import java.util.List;
 
 @Service
 public class MessageService {
-    @Autowired
+    final
     MessageRepo messageRepo;
 
-    @Autowired
+    final
     UserService userService;
 
-    @Autowired
+    final
     LoginService loginService;
+
+    public MessageService(MessageRepo messageRepo, UserService userService, LoginService loginService) {
+        this.messageRepo = messageRepo;
+        this.userService = userService;
+        this.loginService = loginService;
+    }
 
     @Transactional
     public void addMessage(String title, int departmentId, int courseId, int questionId, int uid) {

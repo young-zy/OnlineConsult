@@ -4,7 +4,6 @@ import cf.youngauthentic.consultant.model.course.CourseEntity;
 import cf.youngauthentic.consultant.model.course.CourseWithTeachers;
 import cf.youngauthentic.consultant.model.course.CourseWithoutTeachers;
 import cf.youngauthentic.consultant.repo.CourseRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,11 +12,14 @@ import java.util.List;
 
 @Service
 public class CourseService {
-    @Autowired
-    private CourseRepo courseRepo;
+    private final CourseRepo courseRepo;
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
+
+    public CourseService(CourseRepo courseRepo, LoginService loginService) {
+        this.courseRepo = courseRepo;
+        this.loginService = loginService;
+    }
 
     public List<CourseWithoutTeachers> getCourses(int departmentId, String token, int page) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);

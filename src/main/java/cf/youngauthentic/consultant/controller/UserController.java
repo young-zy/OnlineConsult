@@ -6,7 +6,6 @@ import cf.youngauthentic.consultant.service.Auth;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.LoginService;
 import cf.youngauthentic.consultant.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,16 @@ import java.security.spec.InvalidKeySpecException;
 @RestController
 public class UserController {
 
-    @Autowired
+    final
     UserService userService;
 
-    @Autowired
+    final
     LoginService loginService;
+
+    public UserController(UserService userService, LoginService loginService) {
+        this.userService = userService;
+        this.loginService = loginService;
+    }
 
 //    @GetMapping(path = "/user/{uid}")
 //    public @ResponseBody

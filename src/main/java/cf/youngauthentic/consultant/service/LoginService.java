@@ -3,7 +3,7 @@ package cf.youngauthentic.consultant.service;
 import cf.youngauthentic.consultant.model.Token;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,14 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LoginService {
     Gson gson = new Gson();
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
+
+    public LoginService(@Lazy UserService userService, StringRedisTemplate stringRedisTemplate) {
+        this.userService = userService;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     public String login(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
         UserEntity user = userService.getUser(username);
