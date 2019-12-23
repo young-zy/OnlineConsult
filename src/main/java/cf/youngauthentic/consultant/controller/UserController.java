@@ -87,14 +87,11 @@ public class UserController {
     public ResponseEntity<Object> login(@RequestBody LoginRequestModel login,
                                         @RequestHeader(value = "token", defaultValue = "") String token) throws InvalidKeySpecException, NoSuchAlgorithmException {
         LoginResponseModel loginResponseModel;
-        try {
-            if (loginService.hasAuth(token, Auth.STUDENT)) {          //有token且token有效
-                loginResponseModel = new LoginResponseModel(false, null, "您已经登陆");
-                return new ResponseEntity<>(loginResponseModel, HttpStatus.FORBIDDEN);
-            }
-        } catch (AuthException e) {
-            token = loginService.login(login);
+        if (loginService.isLogined(token)) {          //有token且token有效
+            loginResponseModel = new LoginResponseModel(false, null, "您已经登陆");
+            return new ResponseEntity<>(loginResponseModel, HttpStatus.FORBIDDEN);
         }
+        token = loginService.login(login.username, login.password);
         if (token != null) {
             loginResponseModel = new LoginResponseModel(true, token, "");
             return new ResponseEntity<>(loginResponseModel, HttpStatus.ACCEPTED);

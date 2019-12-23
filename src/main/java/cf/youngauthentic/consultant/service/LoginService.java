@@ -1,9 +1,7 @@
 package cf.youngauthentic.consultant.service;
 
-import cf.youngauthentic.consultant.model.LoginRequestModel;
 import cf.youngauthentic.consultant.model.Token;
 import cf.youngauthentic.consultant.model.user.UserEntity;
-import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,17 +16,17 @@ import java.util.concurrent.TimeUnit;
 public class LoginService {
     Gson gson = new Gson();
     @Autowired
-    private UserRepo userRepository;
+    private UserService userService;
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    public String login(LoginRequestModel model) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        UserEntity user = userRepository.findByUsername(model.username);
-        if (PasswordHash.validatePassword(model.password, user.getHashedPassword())) {
+    public String login(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        UserEntity user = userService.getUser(username);
+        if (PasswordHash.validatePassword(password, user.getHashedPassword())) {
             SecureRandom random = new SecureRandom();
             byte[] bytes = new byte[20];
             random.nextBytes(bytes);
-            String username = user.getUsername();
             long longToken = Math.abs(random.nextLong());
             String tokenStr = Long.toString(longToken, 16);
             Token token = new Token(username + ":" + tokenStr, user.getUid(), user.getAuthority());
@@ -63,7 +61,7 @@ public class LoginService {
         return true;
     }
 
-    private Boolean isLogined(String tokenStr) {
+    public Boolean isLogined(String tokenStr) {
         if (tokenStr.equals("")) {
             return false;
         } else {
