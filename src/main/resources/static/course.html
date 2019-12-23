@@ -159,6 +159,31 @@
 
     $$.ajax({
         method: 'GET',
+        url: './user',
+        success: function (data, textStatus, xhr) {
+            let res = JSON.parse(xhr.responseText);
+            document.getElementById('username').innerText = res["username"];
+            document.getElementById('auth').innerText = res['authority'];
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    $$.ajax({
+        method: 'GET',
         url: './message/count/unread',
         success: function (data, textStatus, xhr) {
             let count = parseInt(xhr.responseText);
@@ -281,7 +306,37 @@
         <a class="mdui-typo-title" href="">问题</a>
         <div class="mdui-toolbar-spacer"></div>
         <a class="mdui-btn mdui-ripple" href="./messages.html" id="new-message"></a>
-        <button class="mdui-btn" onclick="logout()">登出</button>
+        <div class="mc-appbar-user">
+            <div class="mdui-btn mdui-btn-icon mdui-btn-dense user"
+                 mdui-menu="{target: '#appbar-user-popover', covered: false}">
+                <img src="avatar.png" style="width: 32px;height: 32px">
+            </div>
+            <div class="mdui-menu popover" id="appbar-user-popover"
+                 style="transform-origin: 100%; position: absolute; top: 49px; left: 1557px;">
+                <div class="info">
+                    <div class="avatar">
+                        <!--                        <div class="mc-avatar-upload">-->
+                        <!--                            <button class="mdui-btn mdui-btn-icon mdui-ripple upload-btn" type="button" title="点击上传头像">-->
+                        <!--                                <i class="mdui-icon material-icons">photo_camera</i>-->
+                        <!--                            </button><input type="file" title=" " accept="image/jpeg,image/png">-->
+                        <!--                        </div>-->
+                        <img height="96" src="./avatar.png" width="96">
+                    </div>
+                    <div class="username" id="username"></div>
+                    <div class="email" id="auth"></div>
+                    <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple mdui-color-blue mdui-text-color-white personal">
+                        个人资料
+                    </button>
+                </div>
+                <div class="bottom">
+                    <button class="mdui-btn mdui-color-theme-accent mdui-btn-dense mdui-btn-raised mdui-ripple mdui-float-right"
+                            onclick="logout()">
+                        登出
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </header>
 <br><br><br>
