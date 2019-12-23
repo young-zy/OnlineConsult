@@ -1,7 +1,7 @@
 package cf.youngauthentic.consultant.service;
 
 import cf.youngauthentic.consultant.model.RegisterRequestModel;
-import cf.youngauthentic.consultant.model.Token;
+import cf.youngauthentic.consultant.model.user.SimpleUser;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
@@ -26,12 +26,17 @@ public class UserService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    public UserEntity getUser(int uid) {
+    private SimpleUser getUser(int uid) {
         return userRepository.findByUid(uid);
     }
 
     public UserEntity getUser(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public SimpleUser getUserByToken(String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
+        return getUser(loginService.getUid(token));
     }
 
     public void saveUser(UserEntity user) {
@@ -50,20 +55,15 @@ public class UserService {
         saveUser(userEntity);
     }
 
-    public Boolean setPassword(int uid, String oldPass, String newPass, String tokenStr)
+    public Boolean setPassword(String oldPass, String newPass, String tokenStr)
             throws AuthException, InvalidKeySpecException, NoSuchAlgorithmException {
-        if (tokenStr.equals("")) {
-            throw new AuthException("token无效");
-        }
-        Token token = gson.fromJson(stringRedisTemplate.opsForValue().get(tokenStr), Token.class);
-        UserEntity userEntity = getUser(uid);
-        if (userEntity.getUid() != token.getUid()) {
-            throw new AuthException("无修改权限");
-        } else if (!PasswordHash.validatePassword(oldPass, userEntity.getHashedPassword())) {
+        loginService.hasAuth(tokenStr, Auth.STUDENT);
+        int uid = loginService.getUid(tokenStr);
+        String hashedPassword = userRepository.getHashedPassword(uid);
+        if (!PasswordHash.validatePassword(oldPass, hashedPassword)) {
             throw new AuthException("密码不正确");
         } else {
-            userEntity.setHashedPassword(PasswordHash.createHash(newPass));
-            saveUser(userEntity);
+            userRepository.updateHashedPassword(uid, PasswordHash.createHash(newPass));
         }
         return true;
     }

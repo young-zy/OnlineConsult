@@ -23,10 +23,23 @@ public class UserController {
     @Autowired
     LoginService loginService;
 
-    @GetMapping(path = "/user/{uid}")
+//    @GetMapping(path = "/user/{uid}")
+//    public @ResponseBody
+//    UserEntity get(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
+//        return userService.getUser(uid);
+//    }
+
+    @GetMapping(path = "/user")
     public @ResponseBody
-    UserEntity get(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
-        return userService.getUser(uid);
+    ResponseEntity<Object> getOwn(@RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            return new ResponseEntity<>(userService.getUserByToken(token), HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/user/auth")
@@ -42,12 +55,11 @@ public class UserController {
 
     }
 
-    @PostMapping(path = "/user/{uid}/password")
-    public ResponseEntity<Object> setPassword(@PathVariable int uid,
-                                              @RequestBody SetPasswordRequestModel req,
+    @PutMapping(path = "/user/password")
+    public ResponseEntity<Object> setPassword(@RequestBody SetPasswordRequestModel req,
                                               @RequestHeader(value = "token", defaultValue = "") String token) {
         try {
-            userService.setPassword(uid, req.getOldPassword(), req.getNewPassword(), token);
+            userService.setPassword(req.getOldPassword(), req.getNewPassword(), token);
             return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
