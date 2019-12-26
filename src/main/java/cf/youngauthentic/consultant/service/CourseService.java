@@ -44,6 +44,7 @@ public class CourseService {
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setCname(courseName);
         courseEntity.setDepartmentId(departmentId);
+        courseRepo.save(courseEntity);
         return true;
     }
 
