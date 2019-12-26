@@ -298,9 +298,9 @@
     function addCourse() {
         let temp = {
             departmentId: did,
-            cname: $$('new-course-name').val()
+            cname: $$('#new-course-name').val()
         };
-        if (temp.cname === '') {
+        if (temp.cname === '' || !temp.cname) {
             mdui.snackbar(
                 {
                     message: "课程名不可为空",
@@ -308,6 +308,7 @@
                     timeout: 5000,
                 }
             );
+            return;
         }
         $$.ajax({
             method: 'POST',
