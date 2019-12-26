@@ -320,26 +320,35 @@
     }
 
     function updateUser() {
+        let user = {
+            username: $$('#username-input').val(),
+            authority: $$('#auth-select').val()
+        };
         $$.ajax({
             method: 'PUT',
             url: `./user/${uid}`,
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(user),
             success: function (data, textStatus, xhr) {
-
+                mdui.snackbar(
+                    {
+                        message: 更新成功,
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
             },
             error: function (xhr, textStatus) {
-                if (xhr.status === 403) {
-
-                } else {
-                    let msg = JSON.parse(xhr.responseText);
-                    mdui.snackbar(
-                        {
-                            message: msg["reason"],
-                            position: 'top',
-                            timeout: 4000
-                        }
-                    );
-                    console.log(msg);
-                }
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
             }
         });
     }
