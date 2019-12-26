@@ -52,6 +52,20 @@ public class CourseController {
         }
     }
 
+    @DeleteMapping(path = "/department/{did}/course/{cid}")
+    public ResponseEntity<Object> deleteCourse(@PathVariable int did,
+                                               @PathVariable int cid,
+                                               @RequestHeader(defaultValue = "") String token) {
+        try {
+            courseService.deleteCourse(did, cid, token);
+            return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping(path = "/department/{did}/course/count")
     public ResponseEntity<Object> getCourseCount(@PathVariable int did,
                                                  @RequestHeader(defaultValue = "") String token) {

@@ -15,4 +15,6 @@ public interface CourseRepo extends CrudRepository<CourseEntity, CourseEntityPK>
     CourseWithTeachers findByDepartmentIdAndCourseId(int departmentId, int courseId);
 
     int countAllByDepartmentId(int departmentId);
+
+    void deleteByDepartmentIdAndCourseId(int departmentId, int courseId);
 }

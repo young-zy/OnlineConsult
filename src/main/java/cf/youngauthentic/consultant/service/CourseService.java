@@ -7,6 +7,7 @@ import cf.youngauthentic.consultant.repo.CourseRepo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -49,5 +50,12 @@ public class CourseService {
     public int countCourses(int departmentId, String token) throws AuthException {
         loginService.hasAuth(token, Auth.STUDENT);
         return courseRepo.countAllByDepartmentId(departmentId);
+    }
+
+    @Transactional
+    public Boolean deleteCourse(int departmentId, int courseId, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.ADMIN);
+        courseRepo.deleteByDepartmentIdAndCourseId(departmentId, courseId);
+        return true;
     }
 }
