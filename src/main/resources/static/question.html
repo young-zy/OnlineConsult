@@ -59,6 +59,7 @@
             $$('#questionerAuth').append(auth);
             $$('#title').append(title);
             $$('#content').append(res);
+            $$('#questioner-link').prop('href', `./user.html?uid=${question['questioner']['uid']}`);
             if (hasans) {
                 document.getElementById('answer').style.visibility = "visible";
                 let answererName = question['answerer']['username'];
@@ -67,6 +68,7 @@
                 $$('#answererUsername').append(answererName);
                 $$('#answererAuth').append(answererAuth);
                 $$('#answerContent').append(answerContent);
+                $$('#answerer-link').prop('href', `./user.html?uid=${question['answerer']['uid']}`)
             }
         },
         error: function (xhr, textStatus) {
@@ -315,13 +317,17 @@
 
     <div class="mdui-card" id="question" style="margin-bottom: 50px">
         <div class="mdui-card-header">
-            <img class="mdui-card-header-avatar" src="./avatar.png"/>
+            <a id="questioner-link">
+                <img class="mdui-card-header-avatar" src="./avatar.png"/>
+            </a>
             <div class="mdui-card-header-title" id="questionerUsername"></div>
             <div class="mdui-card-header-subtitle" id="questionerAuth"></div>
-
         </div>
         <div class="mdui-card-primary">
             <div class="mdui-card-primary-title" id="title">问题：</div>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-btn-dense" style="float: right">
+                <i class="mdui-icon material-icons">&#xe254;</i>
+            </button>
             <!--            <div class="mdui-card-primary-subtitle">Subtitle</div>-->
         </div>
 
@@ -332,7 +338,9 @@
     </div>
     <div class="mdui-card" id="answer" style="margin-bottom: 50px;visibility: hidden">
         <div class="mdui-card-header">
-            <img class="mdui-card-header-avatar" src="./avatar.png"/>
+            <a id="answerer-link">
+                <img class="mdui-card-header-avatar" src="./avatar.png"/>
+            </a>
             <div class="mdui-card-header-title" id="answererUsername"></div>
             <div class="mdui-card-header-subtitle" id="answererAuth"></div>
 
