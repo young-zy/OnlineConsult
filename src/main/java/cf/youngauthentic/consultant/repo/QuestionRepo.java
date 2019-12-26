@@ -30,4 +30,6 @@ public interface QuestionRepo extends CrudRepository<QuestionEntity, QuestionEnt
     @Query("select q.questionUid from QuestionEntity q where q.departmentId = ?1 and q.courseId = ?2 and q.questionId = ?3")
     int getQuestionerUid(int did, int cid, int qid);
 
+    List<QuestionForList> findAllByQuestionTitleIsLike(String title, Pageable pageable);
+
 }
