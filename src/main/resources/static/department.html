@@ -271,10 +271,10 @@
                 let msg = JSON.parse(xhr.responseText);
                 mdui.snackbar(
                     {
-                        message: msg["reason"],
+                        message: "删除成功，正在刷新",
                         position: 'top',
                         timeout: 2000,
-                        onClose: function () {
+                        onClosed: function () {
                             location.reload();
                         }
                     }
