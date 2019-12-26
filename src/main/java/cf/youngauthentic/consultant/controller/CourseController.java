@@ -1,5 +1,6 @@
 package cf.youngauthentic.consultant.controller;
 
+import cf.youngauthentic.consultant.model.AddCourseRequestModel;
 import cf.youngauthentic.consultant.model.ResponseModel;
 import cf.youngauthentic.consultant.model.course.CourseWithTeachers;
 import cf.youngauthentic.consultant.service.AuthException;
@@ -27,6 +28,21 @@ public class CourseController {
         try {
             int page = Integer.parseInt(pageStr);
             return new ResponseEntity<>(courseService.getCourses(did, token, --page), HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(path = "/department/{did}/course")
+    public ResponseEntity<Object> addCourse(@PathVariable int did,
+                                            @RequestBody AddCourseRequestModel model,
+                                            @RequestHeader(defaultValue = "") String token
+    ) {
+        try {
+            courseService.addCourse(did, model.cname, token);
+            return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.CREATED);
         } catch (AuthException e) {
             return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
         } catch (Exception e) {

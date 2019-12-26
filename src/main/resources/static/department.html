@@ -16,6 +16,10 @@
 
 </script>
 <script type="text/javascript">
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     function getQueryVariable(variable) {
         let query = window.location.search.substring(1);
         let vars = query.split("&");
@@ -119,6 +123,12 @@
                 url.setAttribute('style', 'width: 100%; padding-top:18px; padding-bottom:18px');
                 url.innerText = it['cname'];
                 div.appendChild(url);
+                let button = document.createElement("button");
+                button.setAttribute('class', 'mdui-btn mdui-btn-icon mdui-ripple mdui-hidden can-delete');
+                button.setAttribute('id', 'delete-button');
+                button.setAttribute('onclick', `del(${it['courseId']})`);
+                button.innerHTML = '<i class="mdui-icon material-icons">delete_forever</i>';
+                div.appendChild(button);
                 listItem.appendChild(div);
                 list.appendChild(listItem);
             });
@@ -160,10 +170,18 @@
     $$.ajax({
         method: 'GET',
         url: './user',
-        success: function (data, textStatus, xhr) {
+        success: async function (data, textStatus, xhr) {
             let res = JSON.parse(xhr.responseText);
             document.getElementById('username').innerText = res["username"];
             document.getElementById('auth').innerText = res['authority'];
+            if (res["authority"] === 'admin') {
+                await sleep(2000);
+                let elements = document.getElementsByClassName('can-delete');
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].classList.remove('mdui-hidden');
+                }
+                document.getElementById('addButton').style.visibility = "visible";
+            }
         },
         error: function (xhr, textStatus) {
             if (xhr.status === 403) {
@@ -245,6 +263,90 @@
         window.location.href = "./user.html";
     }
 
+    function del(cid) {
+        $$.ajax({
+            method: 'DELETE',
+            url: `./department/${did}/course/${cid}`,
+            success: function (data, textStatus, xhr) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 2000,
+                        onClose: function () {
+                            location.reload();
+                        }
+                    }
+                );
+                console.log(msg);
+            },
+            error: function (xhr, textStatus) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        });
+    }
+
+    function addCourse() {
+        let temp = {
+            departmentId: did,
+            cname: $$('new-course-name').val()
+        };
+        if (temp.cname === '') {
+            mdui.snackbar(
+                {
+                    message: "课程名不可为空",
+                    position: 'top',
+                    timeout: 5000,
+                }
+            );
+        }
+        $$.ajax({
+            method: 'POST',
+            url: `./department/${did}/course`,
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(temp),
+            success: function (data, textStatus, xhr) {
+                mdui.snackbar(
+                    {
+                        message: "添加成功,正在刷新",
+                        position: 'top',
+                        timeout: 2000,
+                        onClosed: function () {
+                            location.reload();
+                        }
+                    }
+                );
+            },
+            error: function (xhr, textStatus) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        });
+    }
+
+    function addButtonClick() {
+        $$('#overlay').addClass('mdui-overlay-show');
+        $$('#add-course-dialog').addClass('mdui-dialog-open');
+        document.getElementById('add-course-dialog').classList.remove('mdui-hidden');
+    }
+
 </script>
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
@@ -309,6 +411,26 @@
                 class="mdui-icon material-icons">&#xe5cc;</i>
         </button>
     </div>
+    <div class="mdui-dialog mdui-hidden" id="add-course-dialog"
+         style="display: block; top: 52px; height: 220px;">
+        <div class="mdui-container">
+            <div class="mdui-typo-headline" style="margin-top: 40px">添加课程</div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">课程名字</label>
+                <input class="mdui-textfield-input" id="new-course-name"/>
+            </div>
+            <br>
+            <button class="submit-icon mdui-btn mdui-btn-icon mdui-text-color-indigo mdui-text-color-theme"
+                    onclick="addCourse()" style="float: right" type="button">
+                <i class="mdui-icon material-icons">send</i>
+            </button>
+        </div>
+    </div>
+    <div class="mdui-overlay" id="overlay" onclick="dialogBlur()" style="z-index: 5100;"></div>
+    <button class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple" id="addButton"
+            mdui-tooltip="{content: '添加课程'}" onclick="addButtonClick()" style="visibility: hidden">
+        <i class="mdui-icon material-icons">add</i>
+    </button>
 </div>
 </body>
 </html>
