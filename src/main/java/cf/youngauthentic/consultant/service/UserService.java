@@ -5,7 +5,6 @@ import cf.youngauthentic.consultant.model.user.SimpleUser;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +20,9 @@ public class UserService {
 
     private final LoginService loginService;
 
-    private final StringRedisTemplate stringRedisTemplate;
-
-    public UserService(UserRepo userRepository, LoginService loginService, StringRedisTemplate stringRedisTemplate) {
+    public UserService(UserRepo userRepository, LoginService loginService) {
         this.userRepository = userRepository;
         this.loginService = loginService;
-        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     private SimpleUser getUser(int uid) {
