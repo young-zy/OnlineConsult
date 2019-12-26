@@ -3,6 +3,7 @@ package cf.youngauthentic.consultant.service;
 import cf.youngauthentic.consultant.model.Token;
 import cf.youngauthentic.consultant.model.user.UserEntity;
 import com.google.gson.Gson;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class LoginService {
         return true;
     }
 
-    public Boolean isLogined(String tokenStr) {
+    public Boolean isLogined(@NotNull String tokenStr) {
         if (tokenStr.equals("")) {
             return false;
         } else {

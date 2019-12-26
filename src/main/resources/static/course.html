@@ -297,6 +297,10 @@
         });
     }
 
+    function userButtonClick() {
+        window.location.href = "./user.html";
+    }
+
 </script>
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
@@ -324,7 +328,8 @@
                     </div>
                     <div class="username" id="username"></div>
                     <div class="email" id="auth"></div>
-                    <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple mdui-color-blue mdui-text-color-white personal">
+                    <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple mdui-color-blue mdui-text-color-white personal"
+                            onclick="userButtonClick()">
                         个人资料
                     </button>
                 </div>

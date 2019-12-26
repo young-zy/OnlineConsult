@@ -1,10 +1,240 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" xmlns:51.703px>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>用户</title>
+    <link href="./css/app.css" rel="stylesheet" type="text/css">
+    <link href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css" rel="stylesheet">
+    <script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
 </head>
-<body>
 
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+    function getQueryVariable(variable) {
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if (pair[0] === variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
+    let $$ = mdui.JQ;
+    $$.ajaxSetup({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+        }
+    });
+
+    let uid = parseInt(getQueryVariable('uid'));
+    console.log(uid);
+    if (uid === false || isNaN(uid)) {
+        $$.ajax({
+            method: 'GET',
+            url: './user?uid=' + uid,
+            success: function (data, textStatus, xhr) {
+                let li = JSON.parse(xhr.responseText);
+                let list = document.getElementById('list');
+                li.forEach(function (it) {
+                    let listItem = document.createElement('li');
+                    let div = document.createElement('div');
+                    div.setAttribute("class", "mdui-list-item mdui-ripple mdui-card");
+                    div.setAttribute("style", "font-weight: 400;");
+                    let url = document.createElement('a');
+                    url.setAttribute('href', './department.html?department=' + it['departmentId']);
+                    url.setAttribute('style', 'width: 100%; padding-top:18px; padding-bottom:18px');
+                    url.innerText = it['departmentName'];
+                    div.appendChild(url);
+                    listItem.appendChild(div);
+                    list.appendChild(listItem);
+                });
+            },
+            error: function (xhr, textStatus) {
+                if (xhr.status === 403) {
+                    if (window.localStorage.getItem('token')) {
+                        $$('#dialog_title').text("登陆已过期");
+                    } else {
+                        $$('#dialog_title').text("您还未登陆");
+                    }
+                    let dialog = new mdui.Dialog('#redirectToLoginDialog');
+                    let temp = document.getElementById('redirectToLoginDialog');
+                    temp.addEventListener('closed.mdui.dialog', function () {
+                        window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
+                        console.log('redirect to login');
+                        return false
+                    });
+                    temp.addEventListener('confirm.mdui.dialog', function () {
+                        window.location.assign('./login.html?back=' + window.location.href.replace('#mdui-dialog', ''));
+                        console.log('redirect to login');
+                        return false
+                    });
+                    dialog.open();
+                } else {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                }
+            }
+        });
+    } else {
+        $$.ajax({
+            method: 'GET',
+            url: './user',
+            success: function (data, textStatus, xhr) {
+                let res = JSON.parse(xhr.responseText);
+                document.getElementById('username').innerText = res["username"];
+                document.getElementById('auth').innerText = res['authority'];
+            },
+            error: function (xhr, textStatus) {
+                if (xhr.status === 403) {
+
+                } else {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                }
+            }
+        });
+    }
+
+    $$.ajax({
+        method: 'GET',
+        url: './message/count/unread',
+        success: function (data, textStatus, xhr) {
+            let count = parseInt(xhr.responseText);
+            document.getElementById('new-message').innerText = '新消息：' + count + '条';
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    function logout() {
+        $$.ajax({
+            method: 'POST',
+            url: './user/logout',
+            success: function (data, textStatus, xhr) {
+
+            },
+            error: function (xhr, textStatus) {
+                if (xhr.status === 403) {
+
+                } else {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                }
+            }
+        });
+        window.localStorage.clear();
+        location.reload();
+    }
+
+    function userButtonClick() {
+        window.location.href = "./user.html";
+    }
+
+</script>
+<header class="mdui-appbar mdui-appbar-fixed">
+    <div class="mdui-toolbar mdui-color-theme">
+        <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
+        <a class="mdui-typo-title" href="">部门</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a class="mdui-btn mdui-ripple" href="./messages.html" id="new-message"></a>
+        <div class="mc-appbar-user">
+            <div class="mdui-btn mdui-btn-icon mdui-btn-dense user"
+                 mdui-menu="{target: '#appbar-user-popover', covered: false}">
+                <img src="avatar.png" style="width: 32px;height: 32px">
+            </div>
+            <div class="mdui-menu popover" id="appbar-user-popover"
+                 style="transform-origin: 100%; position: absolute; top: 49px; left: 1557px;">
+                <div class="info">
+                    <div class="avatar">
+                        <!--                        <div class="mc-avatar-upload">-->
+                        <!--                            <button class="mdui-btn mdui-btn-icon mdui-ripple upload-btn" type="button" title="点击上传头像">-->
+                        <!--                                <i class="mdui-icon material-icons">photo_camera</i>-->
+                        <!--                            </button><input type="file" title=" " accept="image/jpeg,image/png">-->
+                        <!--                        </div>-->
+                        <img height="96" src="./avatar.png" width="96">
+                    </div>
+                    <div class="username" id="username"></div>
+                    <div class="email" id="auth"></div>
+                    <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple mdui-color-blue mdui-text-color-white personal"
+                            onclick="userButtonClick()">
+                        个人资料
+                    </button>
+                </div>
+                <div class="bottom">
+                    <button class="mdui-btn mdui-color-theme-accent mdui-btn-dense mdui-btn-raised mdui-ripple mdui-float-right"
+                            onclick="logout()">
+                        登出
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<br><br><br>
+<div class="mdui-container">
+
+    <div class="mdui-list" id="list" style="font-size: 20px">
+
+    </div>
+
+    <div class="mdui-dialog" id="redirectToLoginDialog">
+        <div class="mdui-dialog-title" id="dialog_title">您还未登陆</div>
+        <div class="mdui-dialog-content">点击确认跳转至登陆页面!</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+        </div>
+    </div>
+    <div class="mdui-center mdui-text-center" id="page-info" style="font-size: 15px"></div>
+    <div>
+        <button class="mdui-btn" id="previous-button" onclick="previousPage()"><i class="mdui-icon material-icons">&#xe5cb;</i>上一页
+        </button>
+        <button class="mdui-btn" id="next-button" onclick="nextPage()" style="float: right">下一页<i
+                class="mdui-icon material-icons">&#xe5cc;</i>
+        </button>
+    </div>
+</div>
 </body>
 </html>
