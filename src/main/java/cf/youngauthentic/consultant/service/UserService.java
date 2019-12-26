@@ -32,6 +32,11 @@ public class UserService {
         return userRepository.findByUid(uid);
     }
 
+    public SimpleUser getSimpleUserByUid(int uid, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
+        return getUser(uid);
+    }
+
     public UserEntity getUser(String username) {
         return userRepository.findByUsername(username);
     }

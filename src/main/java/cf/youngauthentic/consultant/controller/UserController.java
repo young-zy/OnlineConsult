@@ -46,6 +46,19 @@ public class UserController {
         }
     }
 
+    @GetMapping(path = "/user/{uid}")
+    public @ResponseBody
+    ResponseEntity<Object> getUser(@PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            return new ResponseEntity<>(userService.getSimpleUserByUid(uid, token), HttpStatus.OK);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping(path = "/user/auth")
     public @ResponseBody
     ResponseEntity<Object> getAuth(@RequestHeader(value = "token", defaultValue = "") String token) {
