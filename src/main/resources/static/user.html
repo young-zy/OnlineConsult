@@ -15,6 +15,109 @@
 <script type="text/javascript">
 
 </script>
+<header class="mdui-appbar mdui-appbar-fixed">
+    <div class="mdui-toolbar mdui-color-theme">
+        <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
+        <a class="mdui-typo-title" href="">用户</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a class="mdui-btn mdui-ripple" href="./messages.html" id="new-message"></a>
+        <div class="mc-appbar-user">
+            <div class="mdui-btn mdui-btn-icon mdui-btn-dense user"
+                 mdui-menu="{target: '#appbar-user-popover', covered: false}">
+                <img src="avatar.png" style="width: 32px;height: 32px">
+            </div>
+            <div class="mdui-menu popover" id="appbar-user-popover"
+                 style="transform-origin: 100%; position: absolute; top: 49px; left: 1557px;">
+                <div class="info">
+                    <div class="avatar">
+                        <!--                        <div class="mc-avatar-upload">-->
+                        <!--                            <button class="mdui-btn mdui-btn-icon mdui-ripple upload-btn" type="button" title="点击上传头像">-->
+                        <!--                                <i class="mdui-icon material-icons">photo_camera</i>-->
+                        <!--                            </button><input type="file" title=" " accept="image/jpeg,image/png">-->
+                        <!--                        </div>-->
+                        <img height="96" src="./avatar.png" width="96">
+                    </div>
+                    <div class="username" id="username"></div>
+                    <div class="email" id="auth"></div>
+                    <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple mdui-color-blue mdui-text-color-white personal"
+                            onclick="userButtonClick()">
+                        个人资料
+                    </button>
+                </div>
+                <div class="bottom">
+                    <button class="mdui-btn mdui-color-theme-accent mdui-btn-dense mdui-btn-raised mdui-ripple mdui-float-right"
+                            onclick="logout()">
+                        登出
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<br><br><br>
+<div class="mdui-container">
+    <div class="mdui-card">
+        <div class="mdui-container" style="padding-bottom: 100px">
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">account_circle</i>
+                <label class="mdui-textfield-label">Username</label>
+                <input class="mdui-textfield-input" disabled id="username-input" type="text"/>
+                <!--            <div class="mdui-textfield-helper">Helper Text</div>-->
+            </div>
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label" style="margin-left: 55px">Authority</label>
+            </div>
+            <i class="mdui-icon material-icons" style="margin-left: 6px; margin-right: 15px;">supervisor_account</i>
+            <select class="mdui-select" disabled id="auth-select" mdui-select style="margin-left: 6px;">
+                <option value="student">STUDENT</option>
+                <option value="teacher">TEACHER</option>
+                <option value="admin">ADMIN</option>
+            </select>
+            <br>
+            <button class="mdui-btn mdui-color-theme-accent mdui-btn-raised mdui-ripple mdui-float-right"
+                    id="save-button" onclick="" style="visibility: hidden;">保存
+            </button>
+        </div>
+    </div>
+
+    <div class="mdui-card mdui-hidden" id="change-password-card" style="margin-top: 40px">
+        <div class="mdui-container" style="padding-bottom: 40px">
+            <div class="mdui-textfield mdui-textfield-floating-label" id="old-password-input-area">
+                <label class="mdui-textfield-label">旧密码</label>
+                <input class="mdui-textfield-input" id="old-password-input" name="name" required type="password"/>
+                <div class="mdui-textfield-error">旧密码不正确</div>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label" id="new-password-input-area">
+                <label class="mdui-textfield-label">密码</label>
+                <input class="mdui-textfield-input" id="new-password-input"
+                       pattern="^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z]).*$"
+                       required
+                       type="password"/>
+                <div class="mdui-textfield-error">密码至少 6 位，且包含大小写字母</div>
+                <div class="mdui-textfield-helper">请输入至少 6 位，且包含大小写字母的密码</div>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label" id="password-input-again-error">
+                <label class="mdui-textfield-label">重复密码</label>
+                <input class="mdui-textfield-input" id="password_input_again" onblur="checkSame()"
+                       required type="password"/>
+                <div class="mdui-textfield-error">两次输入的密码不同</div>
+            </div>
+            <button class="mdui-btn mdui-color-theme-accent mdui-btn-raised mdui-ripple mdui-float-right"
+                    id="change-pass" onclick="">更改密码
+            </button>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="redirectToLoginDialog">
+        <div class="mdui-dialog-title" id="dialog_title">您还未登陆</div>
+        <div class="mdui-dialog-content">点击确认跳转至登陆页面!</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+        </div>
+    </div>
+    <div class="mdui-center mdui-text-center" id="page-info" style="font-size: 15px"></div>
+</div>
+</body>
 <script type="text/javascript">
     function getQueryVariable(variable) {
         let query = window.location.search.substring(1);
@@ -37,26 +140,52 @@
 
     let uid = parseInt(getQueryVariable('uid'));
     console.log(uid);
-    if (uid === false || isNaN(uid)) {
+
+    $$.ajax({
+        method: 'GET',
+        url: './user',
+        success: function (data, textStatus, xhr) {
+            let res = JSON.parse(xhr.responseText);
+            document.getElementById('username').innerText = res["username"];
+            document.getElementById('auth').innerText = res['authority'];
+            if (uid === false || isNaN(uid)) {
+                uid = res['uid'];
+                document.getElementById('username-input').value = res["username"];
+                document.getElementById('auth-select').value = res['authority'];
+                let inst = new mdui.Select('#auth-select');
+                inst.handleUpdate();
+            }
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
+
+    if (uid !== false && !isNaN(uid)) {
         $$.ajax({
             method: 'GET',
-            url: './user?uid=' + uid,
+            url: `./user/${uid}`,
             success: function (data, textStatus, xhr) {
-                let li = JSON.parse(xhr.responseText);
-                let list = document.getElementById('list');
-                li.forEach(function (it) {
-                    let listItem = document.createElement('li');
-                    let div = document.createElement('div');
-                    div.setAttribute("class", "mdui-list-item mdui-ripple mdui-card");
-                    div.setAttribute("style", "font-weight: 400;");
-                    let url = document.createElement('a');
-                    url.setAttribute('href', './department.html?department=' + it['departmentId']);
-                    url.setAttribute('style', 'width: 100%; padding-top:18px; padding-bottom:18px');
-                    url.innerText = it['departmentName'];
-                    div.appendChild(url);
-                    listItem.appendChild(div);
-                    list.appendChild(listItem);
-                });
+                let res = JSON.parse(xhr.responseText);
+                if (uid === res["uid"]) {
+                    document.getElementById('change-password-card').classList.remove('mdui-hidden');
+                }
+                document.getElementById('username-input').value = res["username"];
+                document.getElementById('auth-select').value = res['authority'];
+                let inst = new mdui.Select('#auth-select');
+                inst.handleUpdate();
             },
             error: function (xhr, textStatus) {
                 if (xhr.status === 403) {
@@ -92,31 +221,36 @@
             }
         });
     } else {
-        $$.ajax({
-            method: 'GET',
-            url: './user',
-            success: function (data, textStatus, xhr) {
-                let res = JSON.parse(xhr.responseText);
-                document.getElementById('username').innerText = res["username"];
-                document.getElementById('auth').innerText = res['authority'];
-            },
-            error: function (xhr, textStatus) {
-                if (xhr.status === 403) {
-
-                } else {
-                    let msg = JSON.parse(xhr.responseText);
-                    mdui.snackbar(
-                        {
-                            message: msg["reason"],
-                            position: 'top',
-                            timeout: 4000
-                        }
-                    );
-                    console.log(msg);
-                }
-            }
-        });
+        document.getElementById('change-password-card').classList.remove('mdui-hidden');
     }
+
+    $$.ajax({
+        method: 'GET',
+        url: './user/auth',
+        success: async function (data, textStatus, xhr) {
+            let temp = JSON.parse(xhr.responseText);
+            let auth = temp['auth'];
+            if (auth === 'admin') {
+                document.getElementById('auth-select').removeAttribute('disabled');
+                document.getElementById('save-button').style.visibility = "visible";
+            }
+        },
+        error: function (xhr, textStatus) {
+            if (xhr.status === 403) {
+
+            } else {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        }
+    });
 
     $$.ajax({
         method: 'GET',
@@ -173,68 +307,40 @@
         window.location.href = "./user.html";
     }
 
+    function updateUser() {
+        $$.ajax({
+            method: 'PUT',
+            url: `./user/${uid}`,
+            success: function (data, textStatus, xhr) {
+
+            },
+            error: function (xhr, textStatus) {
+                if (xhr.status === 403) {
+
+                } else {
+                    let msg = JSON.parse(xhr.responseText);
+                    mdui.snackbar(
+                        {
+                            message: msg["reason"],
+                            position: 'top',
+                            timeout: 4000
+                        }
+                    );
+                    console.log(msg);
+                }
+            }
+        });
+    }
+
+    function checkSame() {
+        if ($$('#new-password-input').val() !== $$('#new-password-input-again').val()) {
+            $$('#password-input-again-area').addClass('mdui-textfield-invalid');
+            return false;
+        } else {
+            $$('#password-input-again-error').removeClass('mdui-textfield-invalid');
+            return true;
+        }
+    }
+
 </script>
-<header class="mdui-appbar mdui-appbar-fixed">
-    <div class="mdui-toolbar mdui-color-theme">
-        <a class="mdui-typo-headline mdui-hidden-xs" href="./index.html">在线问答系统</a>
-        <a class="mdui-typo-title" href="">部门</a>
-        <div class="mdui-toolbar-spacer"></div>
-        <a class="mdui-btn mdui-ripple" href="./messages.html" id="new-message"></a>
-        <div class="mc-appbar-user">
-            <div class="mdui-btn mdui-btn-icon mdui-btn-dense user"
-                 mdui-menu="{target: '#appbar-user-popover', covered: false}">
-                <img src="avatar.png" style="width: 32px;height: 32px">
-            </div>
-            <div class="mdui-menu popover" id="appbar-user-popover"
-                 style="transform-origin: 100%; position: absolute; top: 49px; left: 1557px;">
-                <div class="info">
-                    <div class="avatar">
-                        <!--                        <div class="mc-avatar-upload">-->
-                        <!--                            <button class="mdui-btn mdui-btn-icon mdui-ripple upload-btn" type="button" title="点击上传头像">-->
-                        <!--                                <i class="mdui-icon material-icons">photo_camera</i>-->
-                        <!--                            </button><input type="file" title=" " accept="image/jpeg,image/png">-->
-                        <!--                        </div>-->
-                        <img height="96" src="./avatar.png" width="96">
-                    </div>
-                    <div class="username" id="username"></div>
-                    <div class="email" id="auth"></div>
-                    <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple mdui-color-blue mdui-text-color-white personal"
-                            onclick="userButtonClick()">
-                        个人资料
-                    </button>
-                </div>
-                <div class="bottom">
-                    <button class="mdui-btn mdui-color-theme-accent mdui-btn-dense mdui-btn-raised mdui-ripple mdui-float-right"
-                            onclick="logout()">
-                        登出
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-<br><br><br>
-<div class="mdui-container">
-
-    <div class="mdui-list" id="list" style="font-size: 20px">
-
-    </div>
-
-    <div class="mdui-dialog" id="redirectToLoginDialog">
-        <div class="mdui-dialog-title" id="dialog_title">您还未登陆</div>
-        <div class="mdui-dialog-content">点击确认跳转至登陆页面!</div>
-        <div class="mdui-dialog-actions">
-            <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
-        </div>
-    </div>
-    <div class="mdui-center mdui-text-center" id="page-info" style="font-size: 15px"></div>
-    <div>
-        <button class="mdui-btn" id="previous-button" onclick="previousPage()"><i class="mdui-icon material-icons">&#xe5cb;</i>上一页
-        </button>
-        <button class="mdui-btn" id="next-button" onclick="nextPage()" style="float: right">下一页<i
-                class="mdui-icon material-icons">&#xe5cc;</i>
-        </button>
-    </div>
-</div>
-</body>
 </html>
