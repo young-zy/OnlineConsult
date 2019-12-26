@@ -1,7 +1,6 @@
 package cf.youngauthentic.consultant.controller;
 
 import cf.youngauthentic.consultant.model.*;
-import cf.youngauthentic.consultant.model.user.UserEntity;
 import cf.youngauthentic.consultant.service.Auth;
 import cf.youngauthentic.consultant.service.AuthException;
 import cf.youngauthentic.consultant.service.LoginService;
@@ -86,18 +85,15 @@ public class UserController {
     }
 
     @PutMapping(path = "/user/{uid}")
-    public ResponseEntity<Object> put(@RequestBody UserEntity user, @PathVariable int uid) {
-        if (user.getUid() == uid) {
-            try {
-                userService.saveUser(user);
-                return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
-            } catch (Exception e) {
-                return new ResponseEntity<>(new ResponseModel(true, e.getMessage()), HttpStatus.BAD_REQUEST);
-            }
-        } else {
+    public ResponseEntity<Object> put(@RequestBody UpdateUserRequestModel user, @PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
+        try {
+            userService.updateUser(uid, user.username, user.authority, token);
             return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
+        } catch (AuthException e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseModel(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @PostMapping("/user/login")

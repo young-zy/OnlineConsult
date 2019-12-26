@@ -7,6 +7,7 @@ import cf.youngauthentic.consultant.repo.UserRepo;
 import com.google.gson.Gson;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -84,4 +85,13 @@ public class UserService {
         return loginService.getAuthority(token);
     }
 
+    @Transactional
+    public Boolean updateUser(int uid, String username, String authority, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.ADMIN);
+        if (!authority.equals("admin") && !authority.equals("teacher") && !authority.equals("student")) {
+            throw new IllegalArgumentException("权限设置错误");
+        }
+        userRepository.updateUser(uid, username, authority);
+        return true;
+    }
 }

@@ -20,4 +20,8 @@ public interface UserRepo extends CrudRepository<UserEntity, Integer> {
 
     @Query("select u.hashedPassword from UserEntity u where u.uid = ?1")
     String getHashedPassword(int uid);
+
+    @Modifying
+    @Query("update UserEntity u set u.username = ?2, u.authority = ?3 where u.uid = ?1")
+    void updateUser(int uid, String username, String authority);
 }
