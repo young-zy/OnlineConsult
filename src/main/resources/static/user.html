@@ -107,7 +107,7 @@
                 <div class="mdui-textfield-error">两次输入的密码不同</div>
             </div>
             <button class="mdui-btn mdui-color-theme-accent mdui-btn-raised mdui-ripple mdui-float-right"
-                    id="change-pass" onclick="">更改密码
+                    id="change-pass" onclick="updatePassword()">更改密码
             </button>
         </div>
     </div>
@@ -333,7 +333,7 @@
             success: function (data, textStatus, xhr) {
                 mdui.snackbar(
                     {
-                        message: 更新成功,
+                        message: "更新成功",
                         position: 'top',
                         timeout: 4000
                     }
@@ -354,13 +354,50 @@
     }
 
     function checkSame() {
-        if ($$('#new-password-input').val() !== $$('#new-password-input-again').val()) {
-            $$('#password-input-again-area').addClass('mdui-textfield-invalid');
+        if ($$('#new-password-input').val() !== $$('#password_input_again').val()) {
+            $$('#password-input-again-error').addClass('mdui-textfield-invalid-html5');
             return false;
         } else {
-            $$('#password-input-again-error').removeClass('mdui-textfield-invalid');
+            $$('#password-input-again-error').removeClass('mdui-textfield-invalid-html5');
             return true;
         }
+    }
+
+    function updatePassword() {
+        let form = {
+            oldPassword: $$('#old-password-input').val(),
+            newPassword: $$('#new-password-input').val()
+        };
+        if (!checkSame() || form.oldPassword === "" || form.newPassword === "") {
+            return false;
+        }
+        $$.ajax({
+            method: 'PUT',
+            url: `./user/password`,
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(form),
+            success: function (data, textStatus, xhr) {
+                mdui.snackbar(
+                    {
+                        message: "更新成功",
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+            },
+            error: function (xhr, textStatus) {
+                let msg = JSON.parse(xhr.responseText);
+                mdui.snackbar(
+                    {
+                        message: msg["reason"],
+                        position: 'top',
+                        timeout: 4000
+                    }
+                );
+                console.log(msg);
+            }
+        });
     }
 
 </script>

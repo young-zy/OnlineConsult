@@ -59,6 +59,7 @@ public class UserService {
         saveUser(userEntity);
     }
 
+    @Transactional
     public Boolean setPassword(String oldPass, String newPass, String tokenStr)
             throws AuthException, InvalidKeySpecException, NoSuchAlgorithmException {
         loginService.hasAuth(tokenStr, Auth.STUDENT);
