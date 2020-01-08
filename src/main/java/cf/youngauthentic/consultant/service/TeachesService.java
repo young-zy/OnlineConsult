@@ -18,9 +18,13 @@ public class TeachesService {
     private final
     TeachesRepo teachesRepo;
 
-    public TeachesService(UserService userService, TeachesRepo teachesRepo) {
+    private final
+    LoginService loginService;
+
+    public TeachesService(UserService userService, TeachesRepo teachesRepo, LoginService loginService) {
         this.userService = userService;
         this.teachesRepo = teachesRepo;
+        this.loginService = loginService;
     }
 
 
@@ -46,7 +50,8 @@ public class TeachesService {
         addTeacher(did, cid, uid);
     }
 
-    public List<UserEntity> getTeachers(int did, int cid) {
+    public List<UserEntity> getTeachers(int did, int cid, String token) throws AuthException {
+        loginService.hasAuth(token, Auth.STUDENT);
         List<TeachesEntity> teachesEntities = teachesRepo.findAllByDepartmentIdAndCourseId(did, cid);
         List<UserEntity> teachers = new ArrayList<>();
         teachesEntities.forEach(it -> teachers.add(it.getTeacher()));

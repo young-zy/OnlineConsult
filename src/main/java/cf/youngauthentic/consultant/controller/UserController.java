@@ -9,9 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 @RestController
 public class UserController {
 
@@ -85,7 +82,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/user/{uid}")
-    public ResponseEntity<Object> put(@RequestBody UpdateUserRequestModel user, @PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
+    public ResponseEntity<Object> updateUser(@RequestBody UpdateUserRequestModel user, @PathVariable int uid, @RequestHeader(value = "token", defaultValue = "") String token) {
         try {
             userService.updateUser(uid, user.username, user.authority, token);
             return new ResponseEntity<>(new ResponseModel(true, ""), HttpStatus.ACCEPTED);
@@ -98,7 +95,7 @@ public class UserController {
 
     @PostMapping("/user/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestModel login,
-                                        @RequestHeader(value = "token", defaultValue = "") String token) throws InvalidKeySpecException, NoSuchAlgorithmException {
+                                        @RequestHeader(value = "token", defaultValue = "") String token) throws Exception {
         LoginResponseModel loginResponseModel;
         if (loginService.isLogined(token)) {          //有token且token有效
             loginResponseModel = new LoginResponseModel(false, null, "您已经登陆");
@@ -125,7 +122,7 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<Object> post(@RequestBody RegisterRequestModel registerRequestModel, @RequestHeader(value = "token", defaultValue = "") String token) {
+    public ResponseEntity<Object> register(@RequestBody RegisterRequestModel registerRequestModel, @RequestHeader(value = "token", defaultValue = "") String token) {
         try {
             if (loginService.hasAuth(token, Auth.STUDENT)) {          //有token且token有效
                 return new ResponseEntity<>(new RegisterResponseModel(false, "您已经登陆"), HttpStatus.FORBIDDEN);

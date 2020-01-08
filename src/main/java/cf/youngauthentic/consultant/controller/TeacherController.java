@@ -30,7 +30,7 @@ public class TeacherController {
                                               @PathVariable int cid,
                                               @RequestHeader(value = "token", defaultValue = "") String token) throws AuthException {
         if (loginService.hasAuth(token, Auth.STUDENT)) {
-            return new ResponseEntity<>(teachesService.getTeachers(did, cid), HttpStatus.OK);
+            return new ResponseEntity<>(teachesService.getTeachers(did, cid, token), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseModel(false, "未登陆"), HttpStatus.OK);
         }

@@ -69,7 +69,7 @@
                 let msg = JSON.parse(xhr.responseText);
                 mdui.snackbar(
                     {
-                        message: msg["reason"],
+                        message: msg["message"],
                         position: 'top',
                         timeout: 4000
                     }
@@ -93,7 +93,7 @@
         <div class="mdui-container">
             <div class="mdui-textfield mdui-textfield-floating-label" id="username-textfield">
                 <label class="mdui-textfield-label">用户名</label>
-                <input class="mdui-textfield-input" id="username_text_input" name="name" type="text"/>
+                <input class="mdui-textfield-input" id="username_text_input" name="name" required type="text"/>
             </div>
             <div class="mdui-textfield mdui-textfield-floating-label">
                 <label class="mdui-textfield-label">密码</label>

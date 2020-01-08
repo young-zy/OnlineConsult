@@ -78,7 +78,7 @@ public class QuestionService {
         int qid = questionRepo.findQuestionId(did, cid);
 //        question = questionRepo.findFirstByDepartmentIdEqualsAndCourseIdEqualsOrderByQuestionIdDesc(did, cid);
         question.setQuestionId(qid);
-        List<UserEntity> teachers = teachesService.getTeachers(did, cid);
+        List<UserEntity> teachers = teachesService.getTeachers(did, cid, token);
         teachers.forEach(it -> {
             messageService.addMessage("新问题：" + question.getQuestionTitle() + " 等待回答", did, cid, qid, it.getUid());
         });

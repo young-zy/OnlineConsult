@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -25,8 +23,11 @@ public class LoginService {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    public String login(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String login(String username, String password) throws Exception {
         UserEntity user = userService.getUser(username);
+        if (user == null) {
+            throw new Exception("未找到用户名");
+        }
         if (PasswordHash.validatePassword(password, user.getHashedPassword())) {
             SecureRandom random = new SecureRandom();
             byte[] bytes = new byte[20];
